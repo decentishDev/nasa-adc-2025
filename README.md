@@ -1,6 +1,6 @@
 # NASA ADC 2025
 
 ```
-YAY
+Monkey
 ```
 A submission from Prospect High School's Computer Science Club
