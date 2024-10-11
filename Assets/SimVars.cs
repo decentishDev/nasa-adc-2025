@@ -2,14 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SimVars : MonoBehaviour
 {
     public TextAsset csvFile;
     public Slider rowSlider;
 
+    public TextMeshProUGUI PositionText;
+    public TextMeshProUGUI VelocityText;
+
     public static float time = 0;
-    public static float[] R = new float[3];
+    public static float[] r = new float[3];
+    public static float[] v = new float[3];
+    public static float m = 0f;
+    public static float wpsa = 0f;
+    public static float wpsaRange = 0f;
+    public static float ds54 = 0f;
+    public static float ds54Range = 0f;
+    public static float ds24 = 0f;
+    public static float ds24Range = 0f;
+    public static float ds34 = 0f;
+    public static float ds34Range = 0f;
 
     private List<string[]> dataRows = new List<string[]>();
     private int currentRow = 0;
@@ -31,8 +45,23 @@ public class SimVars : MonoBehaviour
     {
         currentRow = Mathf.FloorToInt(value);
         time = float.Parse(dataRows[currentRow][0]);
-        R[0] = float.Parse(dataRows[currentRow][1]);
-        R[1] = float.Parse(dataRows[currentRow][2]);
-        R[2] = float.Parse(dataRows[currentRow][3]);
+        r[0] = float.Parse(dataRows[currentRow][1]);
+        r[1] = float.Parse(dataRows[currentRow][2]);
+        r[2] = float.Parse(dataRows[currentRow][3]);
+        v[0] = float.Parse(dataRows[currentRow][4]);
+        v[1] = float.Parse(dataRows[currentRow][5]);
+        v[2] = float.Parse(dataRows[currentRow][6]);
+        // m = float.Parse(dataRows[currentRow][7]);
+        // wpsa = float.Parse(dataRows[currentRow][8]);
+        // wpsaRange = float.Parse(dataRows[currentRow][9]);
+        // ds54 = float.Parse(dataRows[currentRow][10]);
+        // ds54Range = float.Parse(dataRows[currentRow][11]);
+        // ds24 = float.Parse(dataRows[currentRow][12]);
+        // ds24Range = float.Parse(dataRows[currentRow][13]);
+        // ds34 = float.Parse(dataRows[currentRow][14]);
+        // ds34Range = float.Parse(dataRows[currentRow][15]);
+
+        PositionText.text = $"Position: ({r[0]}, {r[1]}, {r[2]})";
+        VelocityText.text = $"Velocity: <{v[0]}, {v[1]}, {v[2]}>";
     }
 }
