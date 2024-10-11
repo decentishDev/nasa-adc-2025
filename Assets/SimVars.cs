@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class SimVars : MonoBehaviour
-{
+public class SimVars : MonoBehaviour {
     public TextAsset csvFile;
     public Slider rowSlider;
 
     public TextMeshProUGUI PositionText;
     public TextMeshProUGUI VelocityText;
+
+    public float AutoTimeSpeed = 10f;
 
     public static float time = 0;
     public static float[] r = new float[3];
@@ -26,7 +27,10 @@ public class SimVars : MonoBehaviour
     public static float ds34Range = 0f;
 
     private List<string[]> dataRows = new List<string[]>();
-    private int currentRow = 0;
+    public int currentRow = 0;
+    public float currentRowUnrounded = 0f;
+
+    public static bool TSliderActive = true;
 
     void Start()
     {
@@ -41,9 +45,11 @@ public class SimVars : MonoBehaviour
         rowSlider.onValueChanged.AddListener(UpdateRow);
     }
 
-    void UpdateRow(float value)
-    {
+    void UpdateRow(float value) {
         currentRow = Mathf.FloorToInt(value);
+        if(TSliderActive){
+            currentRowUnrounded = currentRow;
+        }
         time = float.Parse(dataRows[currentRow][0]);
         r[0] = float.Parse(dataRows[currentRow][1]);
         r[1] = float.Parse(dataRows[currentRow][2]);
@@ -63,5 +69,20 @@ public class SimVars : MonoBehaviour
 
         PositionText.text = $"Position: ({r[0]}, {r[1]}, {r[2]})";
         VelocityText.text = $"Velocity: <{v[0]}, {v[1]}, {v[2]}>";
+    }
+
+    void Update(){
+        if(!TSliderActive){
+            currentRowUnrounded += AutoTimeSpeed * Time.deltaTime;
+            if(Mathf.FloorToInt(currentRowUnrounded) > (dataRows.Count - 1)){
+                currentRowUnrounded = 0f;
+            }
+            UpdateRow(currentRowUnrounded);
+        }
+    }
+
+    public void TSliderToggle(){
+        TSliderActive = !TSliderActive;
+        rowSlider.gameObject.SetActive(TSliderActive);
     }
 }
