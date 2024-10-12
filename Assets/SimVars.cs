@@ -14,7 +14,7 @@ public class SimVars : MonoBehaviour {
     public TextMeshProUGUI PositionText;
     public TextMeshProUGUI VelocityText;
 
-    public float AutoTimeSpeed = 10f;
+    public static float AutoTimeSpeed = 10f;
     private float totalElapsedTime = 0f;
 
     public static float time = 0;
