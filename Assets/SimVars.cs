@@ -15,8 +15,7 @@ public class SimVars : MonoBehaviour {
     public TextMeshProUGUI VelocityText;
 
     public float AutoTimeSpeed = 10f;
-    private float interval;
-    private float timeSinceLastCall = 0f;
+    private float totalElapsedTime = 0f;
 
     public static float time = 0;
     public static float[] r = new float[3];
@@ -49,10 +48,10 @@ public class SimVars : MonoBehaviour {
         rowSlider.maxValue = dataRows.Count - 1;
         rowSlider.onValueChanged.AddListener(UpdateRow);
 
-        interval = 1f / AutoTimeSpeed;
         speedInputField.text = AutoTimeSpeed.ToString();
         string multiplier = (60 * AutoTimeSpeed).ToString("F2");
         actualSpeedText.text = $"data points per second  -  {multiplier}x actual speed";
+        UpdateRow(0f);
     }
 
     void UpdateRow(float value) {
@@ -64,15 +63,6 @@ public class SimVars : MonoBehaviour {
         v[0] = float.Parse(dataRows[currentRow][4]);
         v[1] = float.Parse(dataRows[currentRow][5]);
         v[2] = float.Parse(dataRows[currentRow][6]);
-        // m = float.Parse(dataRows[currentRow][7]);
-        // wpsa = float.Parse(dataRows[currentRow][8]);
-        // wpsaRange = float.Parse(dataRows[currentRow][9]);
-        // ds54 = float.Parse(dataRows[currentRow][10]);
-        // ds54Range = float.Parse(dataRows[currentRow][11]);
-        // ds24 = float.Parse(dataRows[currentRow][12]);
-        // ds24Range = float.Parse(dataRows[currentRow][13]);
-        // ds34 = float.Parse(dataRows[currentRow][14]);
-        // ds34Range = float.Parse(dataRows[currentRow][15]);
 
         rMoon[0] = float.Parse(dataRows[currentRow][14]);
         rMoon[1] = float.Parse(dataRows[currentRow][15]);
@@ -87,20 +77,20 @@ public class SimVars : MonoBehaviour {
 
     void Update(){
         if(!TSliderActive){
-            timeSinceLastCall += Time.deltaTime;
-            if (timeSinceLastCall >= interval){
-                currentRow += 1;
-                if(currentRow > (dataRows.Count - 1)){
-                    currentRow = 0;
-                }
-                UpdateRow(currentRow);
-                timeSinceLastCall = 0f;
+            totalElapsedTime += Time.deltaTime * AutoTimeSpeed;
+            if(Mathf.FloorToInt(totalElapsedTime) >= dataRows.Count){
+                totalElapsedTime = 0f;
             }
+            currentRow = Mathf.FloorToInt(totalElapsedTime);
+            UpdateRow(currentRow);
         }
     }
 
     public void TSliderToggle(){
         TSliderActive = !TSliderActive;
+        if (!TSliderActive) {
+            totalElapsedTime = currentRow;
+        }
         rowSlider.gameObject.SetActive(TSliderActive);
         rowSlider.value = currentRow;
         speedInputMenu.SetActive(!TSliderActive);
@@ -110,6 +100,5 @@ public class SimVars : MonoBehaviour {
         AutoTimeSpeed = float.Parse(speedInputField.text);
         string multiplier = (60 * AutoTimeSpeed).ToString("F2");
         actualSpeedText.text = $"data points per second  -  {multiplier}x actual speed";
-        interval = 1f / AutoTimeSpeed;
     }
 }
