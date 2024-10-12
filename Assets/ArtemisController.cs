@@ -4,15 +4,31 @@ using UnityEngine;
 
 public class ArtemisController : MonoBehaviour {
 
-    public float PositionSmoothingSpeed = 5f;
-    public float RotationSmoothingSpeed = 5f;
+    public float PositionSmoothing = 0f;
+    private float ActualPosSmooth = 1f;
+    public float RotationSmoothing = 0f;
+    private float ActualRotSmooth = 1f;
 
     void Start(){
         
     }
 
     void Update(){
-        transform.position = Vector3.Lerp(transform.position, new Vector3(SimVars.r[0] / 1000f, SimVars.r[1] / 1000f, SimVars.r[2] / 1000f), PositionSmoothingSpeed * Time.deltaTime);
+        if(PositionSmoothing <= 0f){
+            PositionSmoothing = 0f;
+            ActualPosSmooth = 1f;
+        }else{
+            ActualPosSmooth = (20f / PositionSmoothing) * Time.deltaTime;
+        }
+
+        if(RotationSmoothing <= 0f){
+            RotationSmoothing = 0f;
+            ActualRotSmooth = 1f;
+        }else{
+            ActualRotSmooth = (20f / RotationSmoothing) * Time.deltaTime;
+        }
+        
+        transform.position = Vector3.Lerp(transform.position, new Vector3(SimVars.r[0] / 1000f, SimVars.r[1] / 1000f, SimVars.r[2] / 1000f), ActualPosSmooth);
         
         Vector3 velocity = new Vector3(SimVars.v[0], SimVars.v[1], SimVars.v[2]);
         if(velocity.magnitude > 0.001f){
@@ -22,7 +38,7 @@ public class ArtemisController : MonoBehaviour {
                 Mathf.Sign(velocity.z) * Mathf.Abs(velocity.z)
             );
             Quaternion targetRotation = Quaternion.LookRotation(normalizedVelocity);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, RotationSmoothingSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, ActualRotSmooth);
         }
     }
 }
