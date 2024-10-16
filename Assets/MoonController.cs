@@ -9,7 +9,7 @@ public class MoonController : MonoBehaviour {
     }
 
     void Update(){
-        Vector3 newPos = new Vector3(SimVars.rMoon[0] / 1000f, SimVars.rMoon[1] / 1000f, SimVars.rMoon[2] / 1000f);
+        Vector3 newPos = SimVars.rMoon / 1000f;
         if(SimVars.TSliderActive){
             transform.position = newPos;
         }else{
@@ -17,7 +17,7 @@ public class MoonController : MonoBehaviour {
                 lastPos = newPos;
                 transform.position = newPos;
             }else{
-                transform.position += ( new Vector3(SimVars.vMoon[0] / 1000f, SimVars.vMoon[1] / 1000f, SimVars.vMoon[2] / 1000f)) * (60 * SimVars.AutoTimeSpeed * Time.deltaTime);
+                transform.position += (SimVars.vMoon / 1000f) * (60 * SimVars.AutoTimeSpeed * Time.deltaTime);
             }
         }
     }
