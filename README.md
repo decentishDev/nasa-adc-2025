@@ -36,4 +36,6 @@ Moon texture (mapped onto our own sphere model): https://www.cgtrader.com/free-3
 
 Earth model & stars skybox: https://assetstore.unity.com/packages/3d/environments/sci-fi/planet-earth-free-23399
 
+Flames and rocket fire : https://assetstore.unity.com/packages/vfx/particles/fire-effect-vol-1-131886
+
 All another assets or code is either a default part of the Unity game engine or of our own creation.
