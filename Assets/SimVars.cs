@@ -12,6 +12,7 @@ public class SimVars : MonoBehaviour {
     public TMP_InputField speedInputField;
     public TextMeshProUGUI actualSpeedText;
 
+    public TextMeshProUGUI TimeText;
     public TextMeshProUGUI PositionText;
     public TextMeshProUGUI VelocityText;
     public LineRenderer trailRenderer;
@@ -43,6 +44,7 @@ public class SimVars : MonoBehaviour {
     public int currentRow = 0;
 
     public static bool TSliderActive = true;
+    public static bool enlargedProportions = false;
 
     void Start(){
         string[] data = csvFile.text.Split(new char[] {'\n'});
@@ -90,6 +92,9 @@ public class SimVars : MonoBehaviour {
             }
             currentRow = Mathf.FloorToInt(totalElapsedTime);
             UpdateRow(currentRow);
+            TimeText.text = "t = " + (60f * (totalElapsedTime - 1f + 8.236480545f)).ToString() + "s" + FormatTime(60f * (totalElapsedTime - 1f + 8.236480545f));
+        }else{
+            TimeText.text = "t = " + (60f * (currentRow - 1f + 8.236480545f)).ToString() + "s" + FormatTime(60f * (currentRow - 1f + 8.236480545f));
         }
 
         if(RenderingTrail){
@@ -125,6 +130,10 @@ public class SimVars : MonoBehaviour {
         speedInputMenu.SetActive(!TSliderActive);
     }
 
+    public void SizeToggle(){
+        enlargedProportions = !enlargedProportions;
+    }
+
     public void ChangeSimSpeed(){
         AutoTimeSpeed = float.Parse(speedInputField.text);
         string multiplier = (60 * AutoTimeSpeed).ToString("F2");
@@ -149,5 +158,28 @@ public class SimVars : MonoBehaviour {
         float Bn = Mathf.Pow(10, numerator) / 1000f;
 
         return Bn;
+    }
+
+    public string FormatTime(float totalSeconds){
+        int days = (int)(totalSeconds / 86400);
+        totalSeconds %= 86400;
+
+        int hours = (int)(totalSeconds / 3600);
+        totalSeconds %= 3600;
+
+        int minutes = (int)(totalSeconds / 60);
+        int seconds = (int)(totalSeconds % 60);
+
+        string result = "";
+
+        if (minutes == 0) return result;
+        result += " (";
+
+        if (days > 0) result += string.Format("{0:D2} days, ", days);
+        if (hours > 0) result += string.Format("{0:D2} hours, ", hours);
+
+        result += string.Format("{0:D2} minutes, {1:D2} seconds)", minutes, seconds);
+
+        return result;
     }
 }
