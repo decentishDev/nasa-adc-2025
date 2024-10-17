@@ -651,8 +651,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1694498815
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+    rgba: 1291845631
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.29803923}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -790,8 +790,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1694498815
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+    rgba: 1291845631
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.29803923}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1098,7 +1098,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 136f569f078d5e345bffb5655b57b20e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: 1ed46a637355d274ab2d7c9609ac8e93, type: 3}
+  csvFile: {fileID: 4900000, guid: 0cd467de9ab31694baf26ae05cdab3e4, type: 3}
+  csvFileExtra: {fileID: 4900000, guid: 1ed46a637355d274ab2d7c9609ac8e93, type: 3}
   rowSlider: {fileID: 1375806702}
   speedInputMenu: {fileID: 918620414}
   speedInputField: {fileID: 56553844}
@@ -1108,6 +1109,10 @@ MonoBehaviour:
   VelocityText: {fileID: 1088992766}
   trailRenderer: {fileID: 1969536188}
   moonTrailRenderer: {fileID: 308433638}
+  wpsaText: {fileID: 560686467}
+  ds54Text: {fileID: 179948903}
+  ds24Text: {fileID: 219788070}
+  ds34Text: {fileID: 1051596958}
   RenderingTrail: 1
   currentRow: 0
 --- !u!4 &307284930
@@ -14749,8 +14754,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1694498815
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+    rgba: 1291845631
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.29803923}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -16290,8 +16295,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1694498815
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+    rgba: 1291845631
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.29803923}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
