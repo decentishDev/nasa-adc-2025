@@ -11,7 +11,6 @@ public class SimVars : MonoBehaviour {
     public Slider rowSlider;
     public GameObject speedInputMenu;
     public TMP_InputField speedInputField;
-    public TextMeshProUGUI actualSpeedText;
 
     public TextMeshProUGUI TimeText;
     public TextMeshProUGUI PositionText;
@@ -20,7 +19,6 @@ public class SimVars : MonoBehaviour {
     public LineRenderer moonTrailRenderer;
 
     public static float AutoTimeSpeed = 10f;
-    private float totalElapsedTime = 0f;
 
     public static float time = 0;
     public static Vector3 r;
@@ -41,14 +39,23 @@ public class SimVars : MonoBehaviour {
     public static Vector3 vMoon;
     public bool RenderingTrail = true;
 
-    private List<string[]> dataRows = new List<string[]>();
-    private List<string[]> dataRowsExtra = new List<string[]>();
+    private float[] allT = new float[12981];
     private Vector3[] allR = new Vector3[12981];
+    private Vector3[] allV = new Vector3[12981];
+    private float[] allM = new float[12981];
+    private float[] allWPSA = new float[12981];
+    private float[] allDS54 = new float[12981];
+    private float[] allDS24 = new float[12981];
+    private float[] allDS34 = new float[12981];
     private Vector3[] allMoonR = new Vector3[12981];
+    private Vector3[] allMoonV = new Vector3[12981];
     public int currentRow = 0;
 
     public static bool TSliderActive = true;
     public static bool enlargedProportions = false;
+
+    public static float minTime = 0;
+    public static float maxTime = 0;
 
     void Start(){
         string[] data = csvFile.text.Split(new char[] {'\n'});
@@ -57,69 +64,113 @@ public class SimVars : MonoBehaviour {
         for (int i = 1; i < data.Length; i++){
             string[] fields = data[i].Split(new char[] {','});
             string[] fieldsExtra = dataExtra[i].Split(new char[] {','});
-            dataRows.Add(fields);
-            dataRowsExtra.Add(fieldsExtra);
-            Vector3 rPos = new Vector3(float.Parse(fieldsExtra[1]), float.Parse(fieldsExtra[2]), float.Parse(fieldsExtra[3]));
-            Vector3 moonPos = new Vector3(float.Parse(fieldsExtra[14]), float.Parse(fieldsExtra[15]), float.Parse(fieldsExtra[16]));
-            allR[i - 1] = rPos / 1000f;
-            allMoonR[i - 1] = moonPos / 1000f;
+            float[] fieldsF = new float[fields.Length];
+            float[] fieldsExtraF = new float[fieldsExtra.Length];
+            for(int j = 0; j < fields.Length; j++){
+                if (!float.TryParse(fields[j], out fieldsF[j])){
+                    fieldsF[j] = 0f;
+                }
+                if (!float.TryParse(fieldsExtra[j], out fieldsExtraF[j])){
+                    fieldsExtraF[j] = 0f;
+                }
+            }
+
+            allT[i - 1] = fieldsF[0];
+            allR[i - 1] = new Vector3(fieldsExtraF[1], fieldsExtraF[2], fieldsExtraF[3]) / 1000f;
+            allV[i - 1] = new Vector3(fieldsExtraF[4], fieldsExtraF[5], fieldsExtraF[6]) / 1000f;
+            allM[i - 1] = fieldsF[7];
+            allWPSA[i - 1] = fieldsF[9];
+            allDS54[i - 1] = fieldsF[11];
+            allDS24[i - 1] = fieldsF[13];
+            allDS34[i - 1] = fieldsF[15];
+            allMoonR[i - 1] = new Vector3(fieldsExtraF[14], fieldsExtraF[15], fieldsExtraF[16]) / 1000f;
+            allMoonV[i - 1] = new Vector3(fieldsExtraF[17], fieldsExtraF[18], fieldsExtraF[19]) / 1000f;
         }
 
-        rowSlider.maxValue = dataRows.Count - 1;
+        minTime = allT[0];
+        maxTime = allT[allT.Length - 1];
+        rowSlider.minValue = minTime;
+        rowSlider.maxValue = maxTime;
         rowSlider.onValueChanged.AddListener(UpdateRow);
 
         speedInputField.text = AutoTimeSpeed.ToString();
-        string multiplier = (60 * AutoTimeSpeed).ToString("F2");
-        actualSpeedText.text = $"data points per second  -  {multiplier}x actual speed";
-        UpdateRow(0f);
+        UpdateRow(minTime);
     }
 
-    void UpdateRow(float value) {
-        currentRow = Mathf.FloorToInt(value);
-        time = float.Parse(dataRows[currentRow][0]);
-        r = new Vector3(float.Parse(dataRowsExtra[currentRow][1]), float.Parse(dataRowsExtra[currentRow][2]), float.Parse(dataRowsExtra[currentRow][3]));
-        v = new Vector3(float.Parse(dataRowsExtra[currentRow][4]), float.Parse(dataRowsExtra[currentRow][5]), float.Parse(dataRowsExtra[currentRow][6]));
+    void UpdateRow(float tValue) {
+
+        int low = 0;
+        int high = allT.Length - 1;
+
+        if (tValue < allT[low]) {
+            currentRow = -1;
+            return;
+        }
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+
+            if (allT[mid] == tValue) {
+                currentRow = mid;
+                return;
+            }
+            else if (allT[mid] < tValue) {
+                low = mid + 1;
+            }
+            else {
+                high = mid - 1;
+            }
+        }
+
+        currentRow = high;
+        if(TSliderActive){
+            time = tValue;
+        }
+
+        time = tValue;
+        r = allR[currentRow];
+        v = allV[currentRow];
         if(currentRow != 0){
-            lastV = new Vector3(float.Parse(dataRowsExtra[currentRow - 1][4]), float.Parse(dataRowsExtra[currentRow - 1][5]), float.Parse(dataRowsExtra[currentRow - 1][6]));
+            lastV = allV[currentRow];
         }else{
             lastV = v;
         }
-        rMoon = new Vector3(float.Parse(dataRowsExtra[currentRow][14]), float.Parse(dataRowsExtra[currentRow][15]), float.Parse(dataRowsExtra[currentRow][16]));
-        vMoon = new Vector3(float.Parse(dataRowsExtra[currentRow][17]), float.Parse(dataRowsExtra[currentRow][18]), float.Parse(dataRowsExtra[currentRow][19]));
+        rMoon = allMoonR[currentRow];
+        vMoon = allMoonV[currentRow];
 
         PositionText.text = $"Position: ({r.x}, {r.y}, {r.z})";
         VelocityText.text = $"Velocity: <{v.x}, {v.y}, {v.z}>";
 
-        if(float.Parse(dataRows[currentRow][8]) == 1f){
+        if(allWPSA[currentRow] != 0){
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            wpsa = CalculateLinkBudget(12, float.Parse(dataRows[currentRow][9]));
+            wpsa = CalculateLinkBudget(12, allWPSA[currentRow]);
             wpsaText.text = "WSPA data rate: " + wpsa.ToString() + " kbps" + ((wpsa > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             wpsa = 0f;
             wpsaText.text = "WSPA unavailable";
         }
-        if(float.Parse(dataRows[currentRow][10]) == 1f){
+        if(allDS54[currentRow] != 0){
             ds54Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            ds54 = CalculateLinkBudget(34, float.Parse(dataRows[currentRow][11]));
+            ds54 = CalculateLinkBudget(34, allDS54[currentRow]);
             ds54Text.text = "DS54 data rate: " + ds54.ToString() + " kbps" + ((ds54 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds54Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds54 = 0f;
             ds54Text.text = "DS54 unavailable";
         }
-        if(float.Parse(dataRows[currentRow][12]) == 1f){
+        if(allDS24[currentRow] != 0){
             ds24Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            ds24 = CalculateLinkBudget(34, float.Parse(dataRows[currentRow][13]));
+            ds24 = CalculateLinkBudget(34, allDS24[currentRow]);
             ds24Text.text = "DS24 data rate: " + ds24.ToString() + " kbps" + ((ds24 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds24Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds24 = 0f;
             ds24Text.text = "DS24 unavailable";
         }
-        if(float.Parse(dataRows[currentRow][14]) == 1f){
+        if(allDS34[currentRow] != 0){
             ds34Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            ds34 = CalculateLinkBudget(34, float.Parse(dataRows[currentRow][15]));
+            ds34 = CalculateLinkBudget(34, allDS34[currentRow]);
             ds34Text.text = "DS34 data rate: " + ds34.ToString() + " kbps" + ((ds34 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds34Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
@@ -143,16 +194,17 @@ public class SimVars : MonoBehaviour {
 
     void Update(){
         if(!TSliderActive){
-            totalElapsedTime += Time.deltaTime * AutoTimeSpeed;
-            if(Mathf.FloorToInt(totalElapsedTime) >= dataRows.Count){
-                totalElapsedTime = 0f;
+            time += Time.deltaTime * AutoTimeSpeed;
+            if(time > maxTime){
+                time = minTime;
             }
-            currentRow = Mathf.FloorToInt(totalElapsedTime);
-            UpdateRow(currentRow);
-            TimeText.text = "t = " + (60f * (totalElapsedTime - 1f + 8.236480545f)).ToString() + "s" + FormatTime(60f * (totalElapsedTime - 1f + 8.236480545f));
+            UpdateRow(time);
+            
         }else{
-            TimeText.text = "t = " + (60f * (currentRow - 1f + 8.236480545f)).ToString() + "s" + FormatTime(60f * (currentRow - 1f + 8.236480545f));
+            
         }
+
+        TimeText.text = "t = " + time;
 
         if(RenderingTrail){
             trailRenderer.gameObject.SetActive(true);
@@ -179,9 +231,9 @@ public class SimVars : MonoBehaviour {
 
     public void TSliderToggle(){
         TSliderActive = !TSliderActive;
-        if (!TSliderActive) {
-            totalElapsedTime = currentRow;
-        }
+        // if (!TSliderActive) {
+        //     totalElapsedTime = currentRow;
+        // }
         rowSlider.gameObject.SetActive(TSliderActive);
         rowSlider.value = currentRow;
         speedInputMenu.SetActive(!TSliderActive);
@@ -192,9 +244,10 @@ public class SimVars : MonoBehaviour {
     }
 
     public void ChangeSimSpeed(){
-        AutoTimeSpeed = float.Parse(speedInputField.text);
-        string multiplier = (60 * AutoTimeSpeed).ToString("F2");
-        actualSpeedText.text = $"data points per second  -  {multiplier}x actual speed";
+        if (!float.TryParse(speedInputField.text, out AutoTimeSpeed)){
+            AutoTimeSpeed = 0f;
+        }
+        speedInputField.text = AutoTimeSpeed.ToString();
     }
 
     public float CalculateLinkBudget(float diameter, float range){
