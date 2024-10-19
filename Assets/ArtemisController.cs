@@ -57,7 +57,7 @@ public class ArtemisController : MonoBehaviour {
         Vector3 lastV = SimVars.lastV * 1000f;
         Vector3 acceleration = (velocity - lastV) / 1f;
         
-        // if(acceleration.magnitude > 0.000001f){
+        if(SimVars.currentRow != 0f){
             Vector3 normalizedA = new Vector3(
                 Mathf.Sign(acceleration.x) * Mathf.Abs(acceleration.x), 
                 Mathf.Sign(acceleration.y) * Mathf.Abs(acceleration.y), 
@@ -66,7 +66,7 @@ public class ArtemisController : MonoBehaviour {
             Quaternion targetRotationA = Quaternion.LookRotation(normalizedA);
             aArrow.rotation = targetRotationA;
             aArrow.localScale = new Vector3(aArrow.localScale.x, aArrow.localScale.y, (1f - Mathf.Pow(20f, -1000f * acceleration.magnitude)) * 3f);
-        //}
+        }
 
         if(SimVars.enlargedProportions){
             idealScale = new Vector3(200f, 200f, 200f);

@@ -18,6 +18,9 @@ public class SimVars : MonoBehaviour {
     public LineRenderer trailRenderer;
     public LineRenderer moonTrailRenderer;
 
+    public GameObject loadingScreen;
+    public RectTransform loadingBar;
+
     public static float AutoTimeSpeed = 10f;
 
     public static float time = 0;
@@ -50,7 +53,7 @@ public class SimVars : MonoBehaviour {
     private float[] allDS34 = new float[12981];
     private Vector3[] allMoonR = new Vector3[12981];
     private Vector3[] allMoonV = new Vector3[12981];
-    public int currentRow = 0;
+    public static int currentRow = 0;
 
     public static bool TSliderActive = true;
     public static bool enlargedProportions = false;
@@ -58,22 +61,37 @@ public class SimVars : MonoBehaviour {
     public float minTime = 0;
     public float maxTime = 0;
 
+    void Awake(){
+        loadingScreen.SetActive(true);
+    }
+
     void Start(){
+        StartCoroutine(ParseDataAndInitializeUI());
+    }
+
+    IEnumerator ParseDataAndInitializeUI(){
         string[] data = csvFile.text.Split(new char[] {'\n'});
         string[] dataExtra = csvFileExtra.text.Split(new char[] {'\n'});
 
-        for (int i = 1; i < data.Length; i++){
+        for (int i = 1; i < data.Length; i++)
+        {
             string[] fields = data[i].Split(new char[] {','});
             string[] fieldsExtra = dataExtra[i].Split(new char[] {','});
             float[] fieldsF = new float[fields.Length];
             float[] fieldsExtraF = new float[fieldsExtra.Length];
-            for(int j = 0; j < fields.Length; j++){
-                if (!float.TryParse(fields[j], out fieldsF[j])){
+
+            for(int j = 0; j < fields.Length; j++)
+            {
+                if (!float.TryParse(fields[j], out fieldsF[j]))
+                {
                     fieldsF[j] = 0f;
                 }
             }
-            for(int j = 0; j < fieldsExtra.Length; j++){
-                if (!float.TryParse(fieldsExtra[j], out fieldsExtraF[j])){
+
+            for(int j = 0; j < fieldsExtra.Length; j++)
+            {
+                if (!float.TryParse(fieldsExtra[j], out fieldsExtraF[j]))
+                {
                     fieldsExtraF[j] = 0f;
                 }
             }
@@ -88,6 +106,13 @@ public class SimVars : MonoBehaviour {
             allDS34[i - 1] = fieldsF[15];
             allMoonR[i - 1] = new Vector3(fieldsExtraF[14], fieldsExtraF[15], fieldsExtraF[16]) / 1000f;
             allMoonV[i - 1] = new Vector3(fieldsExtraF[17], fieldsExtraF[18], fieldsExtraF[19]) / 1000f;
+
+            if (i % 100 == 0)
+            {
+                yield return null;
+            }
+
+            loadingBar.offsetMax = new Vector2((((float) i) / ((float) data.Length)) * 500f - 500f, loadingBar.offsetMax.y);
         }
 
         minTime = allT[0];
@@ -97,27 +122,26 @@ public class SimVars : MonoBehaviour {
         rowSlider.onValueChanged.AddListener(UpdateRow);
 
         speedInputField.text = AutoTimeSpeed.ToString();
+
         UpdateRow(minTime);
+        loadingScreen.SetActive(false);
     }
 
-    void UpdateRow(float tValue) {
-
+    private int findRow(float t){
         int low = 0;
         int high = allT.Length - 1;
 
-        if (tValue < minTime) {
-            currentRow = -1;
-            return;
+        if (t < minTime) {
+            return -1;
         }
 
         while (low <= high) {
             int mid = (low + high) / 2;
 
-            if (allT[mid] == tValue) {
-                currentRow = mid;
-                return;
+            if (allT[mid] == t) {
+                return mid;
             }
-            else if (allT[mid] < tValue) {
+            else if (allT[mid] < t) {
                 low = mid + 1;
             }
             else {
@@ -125,7 +149,12 @@ public class SimVars : MonoBehaviour {
             }
         }
 
-        currentRow = high;
+        return high;
+    }
+
+    void UpdateRow(float tValue) {
+        currentRow = findRow(tValue);
+        
         if(TSliderActive){
             time = tValue;
         }
@@ -200,6 +229,9 @@ public class SimVars : MonoBehaviour {
             time += Time.deltaTime * AutoTimeSpeed;
             if(time > maxTime){
                 time = minTime;
+            }
+            if(time < minTime){
+                time = maxTime;
             }
             UpdateRow(time);
         }else{
