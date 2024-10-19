@@ -14,7 +14,7 @@ public class MoonController : MonoBehaviour {
     }
 
     void Update(){
-        Vector3 newPos = SimVars.rMoon / 1000f;
+        Vector3 newPos = SimVars.rMoon;
         if(SimVars.TSliderActive){
             transform.position = newPos;
         }else{
@@ -22,7 +22,7 @@ public class MoonController : MonoBehaviour {
                 lastPos = newPos;
                 transform.position = newPos;
             }else{
-                transform.position += (SimVars.vMoon / 1000f) * (60 * SimVars.AutoTimeSpeed * Time.deltaTime);
+                transform.position += SimVars.vMoon * (SimVars.AutoTimeSpeed * Time.deltaTime);
             }
         }
 

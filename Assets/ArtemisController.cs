@@ -19,7 +19,7 @@ public class ArtemisController : MonoBehaviour {
     }
 
     void Update(){
-        Vector3 newPos = SimVars.r / 1000f;
+        Vector3 newPos = SimVars.r;
         if(SimVars.TSliderActive){
             transform.position = newPos;
         }else{
@@ -27,11 +27,11 @@ public class ArtemisController : MonoBehaviour {
                 lastPos = newPos;
                 transform.position = newPos;
             }else{
-                transform.position += (SimVars.v / 1000f) * (60 * SimVars.AutoTimeSpeed * Time.deltaTime);
+                transform.position += SimVars.v * (SimVars.AutoTimeSpeed * Time.deltaTime);
             }
         }
 
-        Vector3 velocity = SimVars.v;
+        Vector3 velocity = SimVars.v * 1000f;
         if(velocity.magnitude > 0.001f){
             Vector3 normalizedVelocity = new Vector3(
                 Mathf.Sign(velocity.x) * Mathf.Abs(velocity.x), 
@@ -45,7 +45,7 @@ public class ArtemisController : MonoBehaviour {
         //Vector3 velocity = SimVars.v;
         if(velocity.magnitude > 0.001f){
             Vector3 normalizedVelocity = new Vector3(
-                Mathf.Sign(velocity.x) * Mathf.Abs(velocity.x), 
+                Mathf.Sign(velocity.x) * Mathf.Abs(velocity.x),
                 Mathf.Sign(velocity.y) * Mathf.Abs(velocity.y), 
                 Mathf.Sign(velocity.z) * Mathf.Abs(velocity.z)
             );
@@ -54,8 +54,8 @@ public class ArtemisController : MonoBehaviour {
             vArrow.localScale = new Vector3(vArrow.localScale.x, vArrow.localScale.y, (1f - Mathf.Pow(5f, -1f * velocity.magnitude)) * 5f);
         }
 
-        Vector3 lastV = SimVars.lastV;
-        Vector3 acceleration = (velocity - lastV) / 60f;
+        Vector3 lastV = SimVars.lastV * 1000f;
+        Vector3 acceleration = (velocity - lastV) / 1f;
         
         // if(acceleration.magnitude > 0.000001f){
             Vector3 normalizedA = new Vector3(

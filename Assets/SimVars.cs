@@ -21,6 +21,7 @@ public class SimVars : MonoBehaviour {
     public static float AutoTimeSpeed = 10f;
 
     public static float time = 0;
+    public float time60 = 0;
     public static Vector3 r;
     public static Vector3 v;
     public static Vector3 lastV;
@@ -54,8 +55,8 @@ public class SimVars : MonoBehaviour {
     public static bool TSliderActive = true;
     public static bool enlargedProportions = false;
 
-    public static float minTime = 0;
-    public static float maxTime = 0;
+    public float minTime = 0;
+    public float maxTime = 0;
 
     void Start(){
         string[] data = csvFile.text.Split(new char[] {'\n'});
@@ -70,12 +71,14 @@ public class SimVars : MonoBehaviour {
                 if (!float.TryParse(fields[j], out fieldsF[j])){
                     fieldsF[j] = 0f;
                 }
+            }
+            for(int j = 0; j < fieldsExtra.Length; j++){
                 if (!float.TryParse(fieldsExtra[j], out fieldsExtraF[j])){
                     fieldsExtraF[j] = 0f;
                 }
             }
 
-            allT[i - 1] = fieldsF[0];
+            allT[i - 1] = fieldsF[0] * 60f;
             allR[i - 1] = new Vector3(fieldsExtraF[1], fieldsExtraF[2], fieldsExtraF[3]) / 1000f;
             allV[i - 1] = new Vector3(fieldsExtraF[4], fieldsExtraF[5], fieldsExtraF[6]) / 1000f;
             allM[i - 1] = fieldsF[7];
@@ -102,7 +105,7 @@ public class SimVars : MonoBehaviour {
         int low = 0;
         int high = allT.Length - 1;
 
-        if (tValue < allT[low]) {
+        if (tValue < minTime) {
             currentRow = -1;
             return;
         }
@@ -127,24 +130,24 @@ public class SimVars : MonoBehaviour {
             time = tValue;
         }
 
-        time = tValue;
+        //time = tValue;
         r = allR[currentRow];
         v = allV[currentRow];
         if(currentRow != 0){
-            lastV = allV[currentRow];
+            lastV = allV[currentRow - 1];
         }else{
             lastV = v;
         }
         rMoon = allMoonR[currentRow];
         vMoon = allMoonV[currentRow];
 
-        PositionText.text = $"Position: ({r.x}, {r.y}, {r.z})";
-        VelocityText.text = $"Velocity: <{v.x}, {v.y}, {v.z}>";
+        PositionText.text = $"Position: ({(int) (r.x * 1000f)}, {(int) (r.y * 1000f)}, {(int) (r.z * 1000f)})";
+        VelocityText.text = $"Velocity: <{Mathf.Round(v.x * 1000f * 100f) * 0.01f}, {Mathf.Round(v.y * 1000f * 100f) * 0.01f}, {Mathf.Round(v.z * 1000f * 100f) * 0.01f}>";
 
         if(allWPSA[currentRow] != 0){
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             wpsa = CalculateLinkBudget(12, allWPSA[currentRow]);
-            wpsaText.text = "WSPA data rate: " + wpsa.ToString() + " kbps" + ((wpsa > 10000) ? " (max 10,000 kbps)" : "");
+            wpsaText.text = "WSPA data rate: " + ((int) wpsa).ToString() + " kbps" + ((wpsa > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             wpsa = 0f;
@@ -153,7 +156,7 @@ public class SimVars : MonoBehaviour {
         if(allDS54[currentRow] != 0){
             ds54Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             ds54 = CalculateLinkBudget(34, allDS54[currentRow]);
-            ds54Text.text = "DS54 data rate: " + ds54.ToString() + " kbps" + ((ds54 > 10000) ? " (max 10,000 kbps)" : "");
+            ds54Text.text = "DS54 data rate: " + ((int) ds54).ToString() + " kbps" + ((ds54 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds54Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds54 = 0f;
@@ -162,7 +165,7 @@ public class SimVars : MonoBehaviour {
         if(allDS24[currentRow] != 0){
             ds24Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             ds24 = CalculateLinkBudget(34, allDS24[currentRow]);
-            ds24Text.text = "DS24 data rate: " + ds24.ToString() + " kbps" + ((ds24 > 10000) ? " (max 10,000 kbps)" : "");
+            ds24Text.text = "DS24 data rate: " + ((int) ds24).ToString() + " kbps" + ((ds24 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds24Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds24 = 0f;
@@ -171,7 +174,7 @@ public class SimVars : MonoBehaviour {
         if(allDS34[currentRow] != 0){
             ds34Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             ds34 = CalculateLinkBudget(34, allDS34[currentRow]);
-            ds34Text.text = "DS34 data rate: " + ds34.ToString() + " kbps" + ((ds34 > 10000) ? " (max 10,000 kbps)" : "");
+            ds34Text.text = "DS34 data rate: " + ((int) ds34).ToString() + " kbps" + ((ds34 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds34Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds34 = 0f;
@@ -199,12 +202,11 @@ public class SimVars : MonoBehaviour {
                 time = minTime;
             }
             UpdateRow(time);
-            
         }else{
             
         }
 
-        TimeText.text = "t = " + time;
+        TimeText.text = "t = " + (Mathf.Round(time * 100f) * 0.01f).ToString() + FormatTime(time);
 
         if(RenderingTrail){
             trailRenderer.gameObject.SetActive(true);
@@ -227,15 +229,14 @@ public class SimVars : MonoBehaviour {
             trailRenderer.gameObject.SetActive(false);
             moonTrailRenderer.gameObject.SetActive(false);
         }
+
+        time60 = time / 60;
     }
 
     public void TSliderToggle(){
         TSliderActive = !TSliderActive;
-        // if (!TSliderActive) {
-        //     totalElapsedTime = currentRow;
-        // }
         rowSlider.gameObject.SetActive(TSliderActive);
-        rowSlider.value = currentRow;
+        rowSlider.value = time;
         speedInputMenu.SetActive(!TSliderActive);
     }
 
