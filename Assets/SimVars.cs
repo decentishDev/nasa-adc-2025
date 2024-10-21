@@ -58,6 +58,11 @@ public class SimVars : MonoBehaviour {
     public static bool TSliderActive = true;
     public static bool enlargedProportions = false;
 
+    public static bool cameraZoomer = false;
+
+    public static bool flamer = false;
+
+
     public float minTime = 0;
     public float maxTime = 0;
 
@@ -274,6 +279,21 @@ public class SimVars : MonoBehaviour {
 
     public void SizeToggle(){
         enlargedProportions = !enlargedProportions;
+    }
+
+    public void CameraZoom(){
+        if(cameraZoomer) {
+            cameraZoomer = false;
+        } else {
+            cameraZoomer = true;
+        }    }
+
+    public void FlameOn(){
+        if(flamer) {
+            flamer = false;
+        } else {
+            flamer = true;
+        }
     }
 
     public void ChangeSimSpeed(){

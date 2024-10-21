@@ -5,7 +5,7 @@ using UnityEngine;
 public class FlameController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject flame;
+    public ParticleSystem particleSystem;
 
     void Start()
     {
@@ -15,11 +15,19 @@ public class FlameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SimVars.enlargedProportions) {
-            flame.SetActive(true);   
-        } else {
-            flame.SetActive(false);   
+        // if (SimVars.flamer) {
+        //     Flame.SetActive(false);   
+        // } else {
+        //     Flame.SetActive(true);   
 
+        // }
+        if (SimVars.flamer)
+        {
+            particleSystem.Play();  // Start playing the particle system
+        }
+        else
+        {
+            particleSystem.Stop();  // Stop the particle system
         }
     }
 }
