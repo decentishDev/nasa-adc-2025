@@ -5,25 +5,25 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
 
-    // Start is called before the first frame update
+    public static float cameraMode = 0f;
+    private float numberOfModes = 2f;
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (SimVars.cameraZoomer) {
-            if (SimVars.enlargedProportions) {
-                transform.position = SimVars.r + new Vector3(0,0,-40);
-            } else {
-                transform.position = SimVars.r + new Vector3(0,0,-1f);
+    void Update(){
+        if(cameraMode == 0f){
+            transform.position = Vector3.Lerp(transform.position, new Vector3(-218f, -82f, -235f), 0.05f);
+        }else if(cameraMode == 1f){
+            transform.position = Vector3.Lerp(transform.position, new Vector3(0f, 0f, -75f) + SimVars.r, 0.05f);
+        }
+    }
 
-            }
-
-        } else {
-            transform.position = new Vector3(-218, -82, -235);
+    public void SwitchCameraMode(){
+        cameraMode += 1f;
+        if(cameraMode > numberOfModes - 1f){
+            cameraMode = 0f;
         }
     }
 }
