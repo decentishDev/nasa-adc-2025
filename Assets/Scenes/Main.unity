@@ -1189,7 +1189,6 @@ MonoBehaviour:
   moonTrailRenderer: {fileID: 308433638}
   loadingScreen: {fileID: 720274663}
   loadingBar: {fileID: 589302479}
-  time60: 0
   wpsaText: {fileID: 560686467}
   ds54Text: {fileID: 179948903}
   ds24Text: {fileID: 219788070}
@@ -14776,7 +14775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -789.1, y: -372.8}
+  m_AnchoredPosition: {x: -789.1, y: -423.2}
   m_SizeDelta: {x: 256.1, y: 43.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &488159039
@@ -18748,7 +18747,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 334.2, y: -425}
+  m_AnchoredPosition: {x: 334.2, y: -368.4}
   m_SizeDelta: {x: -668.4, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1510498460
@@ -19637,7 +19636,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1860067958
 Transform:
   m_ObjectHideFlags: 0

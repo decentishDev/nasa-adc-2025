@@ -66,6 +66,8 @@ public class ArtemisController : MonoBehaviour {
             Quaternion targetRotationA = Quaternion.LookRotation(normalizedA);
             aArrow.rotation = targetRotationA;
             aArrow.localScale = new Vector3(aArrow.localScale.x, aArrow.localScale.y, (1f - Mathf.Pow(20f, -1000f * acceleration.magnitude)) * 3f);
+        }else{
+            aArrow.localScale = new Vector3(aArrow.localScale.x, aArrow.localScale.y, 0f);
         }
 
         if(SimVars.enlargedProportions){

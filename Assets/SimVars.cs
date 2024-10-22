@@ -23,8 +23,7 @@ public class SimVars : MonoBehaviour {
 
     public static float AutoTimeSpeed = 10f;
 
-    public static float time = 0;
-    public float time60 = 0;
+    public static double time = 0;
     public static Vector3 r;
     public static Vector3 v;
     public static Vector3 lastV;
@@ -158,12 +157,12 @@ public class SimVars : MonoBehaviour {
     }
 
     void UpdateRow(float tValue) {
+        
         currentRow = findRow(tValue);
         
         if(TSliderActive){
             time = tValue;
         }
-
         //time = tValue;
         r = allR[currentRow];
         v = allV[currentRow];
@@ -232,18 +231,19 @@ public class SimVars : MonoBehaviour {
     void Update(){
         if(!TSliderActive){
             time += Time.deltaTime * AutoTimeSpeed;
+            
             if(time > maxTime){
                 time = minTime;
             }
             if(time < minTime){
                 time = maxTime;
             }
-            UpdateRow(time);
+            UpdateRow((float) time);
         }else{
             
         }
 
-        TimeText.text = "t = " + (Mathf.Round(time * 100f) * 0.01f).ToString() + FormatTime(time);
+        TimeText.text = "t = " + (Mathf.Round((float) time * 100f) * 0.01f).ToString() + FormatTime((float) time);
 
         if(RenderingTrail){
             trailRenderer.gameObject.SetActive(true);
@@ -267,13 +267,12 @@ public class SimVars : MonoBehaviour {
             moonTrailRenderer.gameObject.SetActive(false);
         }
 
-        time60 = time / 60;
     }
 
     public void TSliderToggle(){
         TSliderActive = !TSliderActive;
         rowSlider.gameObject.SetActive(TSliderActive);
-        rowSlider.value = time;
+        rowSlider.value = (float) time;
         speedInputMenu.SetActive(!TSliderActive);
     }
 
