@@ -8,10 +8,10 @@ public class CameraFollow : MonoBehaviour
     public static float cameraMode = 0f;
     private float numberOfModes = 2f;
 
-    public Transform spaceship; // Assign the spaceship object in the inspector
+    public Transform spaceship;
     public float rotationSpeed = 50f; // Speed of rotation around the spaceship
     public float distance = 75f; // Distance between the camera and the spaceship
-    private float currentRotationAngle = 0f; // Track the current angle of rotation
+    private float currentRotationAngle = 0f; 
 
     void Start()
     {
@@ -30,15 +30,15 @@ public class CameraFollow : MonoBehaviour
 
             float horizontalInput = Input.GetAxis("Horizontal");
 
-            // If there is horizontal input, rotate the camera
             if (horizontalInput != 0f) {
+
                 currentRotationAngle += horizontalInput * rotationSpeed * Time.deltaTime;
+        
             }
-            
+
             Vector3 direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
             transform.position = spaceship.position + direction;
 
-            // Make the camera look at the spaceship
             transform.LookAt(spaceship.position);
         }
     }
