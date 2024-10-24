@@ -6,6 +6,7 @@ public class FlameController : MonoBehaviour
 {
     // Start is called before the first frame update
     public ParticleSystem particleSystem;
+    public Rigidbody rb; // The Rigidbody of the object
 
     void Start()
     {
@@ -15,19 +16,13 @@ public class FlameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (SimVars.flamer) {
-        //     Flame.SetActive(false);   
-        // } else {
-        //     Flame.SetActive(true);   
-
-        // }
         if (SimVars.flamer)
         {
-            particleSystem.Play();  // Start playing the particle system
+            particleSystem.Play(); 
         }
         else
         {
-            particleSystem.Stop();  // Stop the particle system
+            particleSystem.Stop();  
         }
     }
 }

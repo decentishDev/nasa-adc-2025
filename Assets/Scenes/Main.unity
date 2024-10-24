@@ -15572,6 +15572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 761719720}
+  rb: {fileID: 0}
 --- !u!1 &766430358
 GameObject:
   m_ObjectHideFlags: 0
@@ -16502,6 +16503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 1023132355}
+  rb: {fileID: 0}
 --- !u!1 &1024018531
 GameObject:
   m_ObjectHideFlags: 0
@@ -17266,6 +17268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 1123684453}
+  rb: {fileID: 0}
 --- !u!1 &1141532112
 GameObject:
   m_ObjectHideFlags: 0
@@ -19049,6 +19052,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f230799540d4cb478b5ceefd0d343aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spaceship: {fileID: 1300767365}
+  rotationSpeed: 50
+  distance: 75
 --- !u!1001 &1601285435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19621,6 +19627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 1855722534}
+  rb: {fileID: 0}
 --- !u!1 &1860067957
 GameObject:
   m_ObjectHideFlags: 0
@@ -19636,7 +19643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1860067958
 Transform:
   m_ObjectHideFlags: 0
@@ -33197,6 +33204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 2009865303}
+  rb: {fileID: 0}
 --- !u!1 &2025205103
 GameObject:
   m_ObjectHideFlags: 0
@@ -33505,6 +33513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 2094532657}
+  rb: {fileID: 0}
 --- !u!1 &2139324757
 GameObject:
   m_ObjectHideFlags: 0
