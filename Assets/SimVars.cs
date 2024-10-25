@@ -65,6 +65,8 @@ public class SimVars : MonoBehaviour {
     public float minTime = 0;
     public float maxTime = 0;
 
+    public static float lerpConstant = 0.05f;
+
     void Awake(){
         loadingScreen.SetActive(true);
     }
@@ -229,6 +231,8 @@ public class SimVars : MonoBehaviour {
     }
 
     void Update(){
+        lerpConstant = 10f * Time.deltaTime;
+
         if(!TSliderActive){
             time += Time.deltaTime * AutoTimeSpeed;
             
