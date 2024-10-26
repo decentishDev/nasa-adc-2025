@@ -22,8 +22,9 @@ public class CameraFollow : MonoBehaviour
     private Vector3 lastMousePosition;
     private bool isDragging = false;
     public float mouseSensitivity = 10f;
-    public float minVerticalAngle = -360;
-    public float maxVerticalAngle = 360f;
+    public float minVerticalAngle = -80;
+    public float maxVerticalAngle = 80f;
+
     void Start()
     {
         
@@ -43,7 +44,7 @@ public class CameraFollow : MonoBehaviour
         }else if (cameraMode == 1f){
             transform.position = Vector3.Lerp(transform.position, new Vector3(0f, 0f, -75f) + SimVars.r, SimVars.lerpConstant);
 
-        }else if (cameraMode == 2f){
+        } else if (cameraMode == 2f) {
             HandleMouseInput();
             UpdateCameraPosition();
 
@@ -53,17 +54,21 @@ public class CameraFollow : MonoBehaviour
             //Vector3 direction = Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
 
             if (horizontalInput != 0f) {
-                currentRotationAngle -= horizontalInput * rotationSpeed * Time.deltaTime;
-                direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
+                 currentRotationAngle -= horizontalInput * rotationSpeed * Time.deltaTime;
+                 direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
                 //transform.position = spaceship.position + direction;
+                //transform.RotateAround(spaceship.position, Vector3.up, horizontalInput * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
+
             }
 
             if (verticalInput != 0f) {
                 currentRotationAngle -= verticalInput * rotationSpeed * Time.deltaTime;
                 direction = new Vector3(0, Mathf.Sin(currentRotationAngle), Mathf.Cos(currentRotationAngle)) * distance;
+                transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
+
             }
 
-            transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
             transform.LookAt(spaceship.position);
         }
     }
@@ -105,6 +110,7 @@ public class CameraFollow : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPosition, SimVars.lerpConstant);
         
         transform.LookAt(spaceship.position);
+
     }
 
     public void SwitchCameraMode(){
