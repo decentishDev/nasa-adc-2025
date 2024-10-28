@@ -5,7 +5,7 @@ using UnityEngine;
 public class FlameController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public ParticleSystem particleSystem;
+    public ParticleSystem particleSystems;
     public Rigidbody rb; // The Rigidbody of the object
 
     void Start()
@@ -18,11 +18,11 @@ public class FlameController : MonoBehaviour
     {
         if (SimVars.flamer)
         {
-            particleSystem.Play(); 
+            particleSystems.Play(); 
         }
         else
         {
-            particleSystem.Stop();  
+            particleSystems.Stop();  
         }
     }
 }
