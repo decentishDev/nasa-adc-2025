@@ -51,5 +51,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "nasa-adc-2025.sln"
+    "dotnet.defaultSolution": "nasa-adc-2025.sln",
+    "dotnet.preferCSharpExtension": true
 }
