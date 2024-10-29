@@ -6,8 +6,6 @@ public class FlameController : MonoBehaviour
 {
     // Start is called before the first frame update
     public ParticleSystem particleSystems;
-    public Rigidbody rb; // The Rigidbody of the object
-
     void Start()
     {
         

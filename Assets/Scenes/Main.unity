@@ -15572,8 +15572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59721d99a7da4796af4d89304e24f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 761719720}
-  rb: {fileID: 0}
+  particleSystems: {fileID: 761719720}
 --- !u!1 &766430358
 GameObject:
   m_ObjectHideFlags: 0
@@ -16578,8 +16577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59721d99a7da4796af4d89304e24f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 1023132355}
-  rb: {fileID: 0}
+  particleSystems: {fileID: 1023132355}
 --- !u!1 &1024018531
 GameObject:
   m_ObjectHideFlags: 0
@@ -17343,8 +17341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59721d99a7da4796af4d89304e24f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 1123684453}
-  rb: {fileID: 0}
+  particleSystems: {fileID: 1123684453}
 --- !u!1 &1141532112
 GameObject:
   m_ObjectHideFlags: 0
@@ -19132,6 +19129,9 @@ MonoBehaviour:
   spaceship: {fileID: 1300767365}
   rotationSpeed: 5
   distance: 75
+  mouseSensitivity: 10
+  minVerticalAngle: -80
+  maxVerticalAngle: 80
 --- !u!1001 &1601285435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19703,8 +19703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59721d99a7da4796af4d89304e24f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 1855722534}
-  rb: {fileID: 0}
+  particleSystems: {fileID: 1855722534}
 --- !u!1 &1860067957
 GameObject:
   m_ObjectHideFlags: 0
@@ -33280,8 +33279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59721d99a7da4796af4d89304e24f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 2009865303}
-  rb: {fileID: 0}
+  particleSystems: {fileID: 2009865303}
 --- !u!1 &2025205103
 GameObject:
   m_ObjectHideFlags: 0
@@ -33589,8 +33587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59721d99a7da4796af4d89304e24f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 2094532657}
-  rb: {fileID: 0}
+  particleSystems: {fileID: 2094532657}
 --- !u!1 &2139324757
 GameObject:
   m_ObjectHideFlags: 0
