@@ -38,6 +38,8 @@ public class SimVars : MonoBehaviour {
     public static float ds34 = 0f;
     public TextMeshProUGUI ds34Text;
 
+    public TextMeshProUGUI totalDistanceText;
+
     public static Vector3 rMoon;
     public static Vector3 vMoon;
     public bool RenderingTrail = true;
@@ -52,6 +54,7 @@ public class SimVars : MonoBehaviour {
     private float[] allDS34 = new float[12981];
     private Vector3[] allMoonR = new Vector3[12981];
     private Vector3[] allMoonV = new Vector3[12981];
+    private float[] allTotalDistance = new float[12981];
     public static int currentRow = 0;
 
     public static bool TSliderActive = true;
@@ -79,6 +82,8 @@ public class SimVars : MonoBehaviour {
         string[] data = csvFile.text.Split(new char[] {'\n'});
         string[] dataExtra = csvFileExtra.text.Split(new char[] {'\n'});
 
+        Vector3 previousR = new Vector3(0f, 0f, 0f);
+
         for (int i = 1; i < data.Length; i++)
         {
             string[] fields = data[i].Split(new char[] {','});
@@ -102,8 +107,10 @@ public class SimVars : MonoBehaviour {
                 }
             }
 
+            Vector3 thisR = new Vector3(fieldsExtraF[1], fieldsExtraF[2], fieldsExtraF[3]);
+            
             allT[i - 1] = fieldsF[0] * 60f;
-            allR[i - 1] = new Vector3(fieldsExtraF[1], fieldsExtraF[2], fieldsExtraF[3]) / 1000f;
+            allR[i - 1] = thisR / 1000f;
             allV[i - 1] = new Vector3(fieldsExtraF[4], fieldsExtraF[5], fieldsExtraF[6]) / 1000f;
             allM[i - 1] = fieldsF[7];
             allWPSA[i - 1] = fieldsF[9];
@@ -112,6 +119,12 @@ public class SimVars : MonoBehaviour {
             allDS34[i - 1] = fieldsF[15];
             allMoonR[i - 1] = new Vector3(fieldsExtraF[14], fieldsExtraF[15], fieldsExtraF[16]) / 1000f;
             allMoonV[i - 1] = new Vector3(fieldsExtraF[17], fieldsExtraF[18], fieldsExtraF[19]) / 1000f;
+            
+            if(i > 1){
+                allTotalDistance[i - 1] = allTotalDistance[i - 2] + (thisR - previousR).magnitude;
+            }
+
+            previousR = thisR;
 
             if (i % 100 == 0)
             {
@@ -228,6 +241,8 @@ public class SimVars : MonoBehaviour {
         if(ds34 > wpsa && ds34 > ds54 && ds34 > ds24){
             ds34Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
         }
+
+        totalDistanceText.text = "Total distance travelled: " + ((int) allTotalDistance[currentRow]) + "km";
     }
 
     void Update(){
