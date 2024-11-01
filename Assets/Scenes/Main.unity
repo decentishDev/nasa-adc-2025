@@ -14375,6 +14375,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1860067958}
     m_Modifications:
+    - target: {fileID: 4680618816855230032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4767057193696183032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.05
@@ -14455,6 +14459,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1860067958}
     m_Modifications:
+    - target: {fileID: 4680618816855230032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4767057193696183032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.05
@@ -18582,6 +18590,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1860067958}
     m_Modifications:
+    - target: {fileID: 4680618816855230032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4767057193696183032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.05
@@ -19129,6 +19141,8 @@ MonoBehaviour:
   spaceship: {fileID: 1300767365}
   rotationSpeed: 5
   distance: 75
+  currentRotationAngle: 180
+  verticalRotation: 0
   mouseSensitivity: 10
   minVerticalAngle: -80
   maxVerticalAngle: 80
@@ -19395,6 +19409,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1860067958}
     m_Modifications:
+    - target: {fileID: 4680618816855230032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4767057193696183032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.05
@@ -19475,6 +19493,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1860067958}
     m_Modifications:
+    - target: {fileID: 4680618816855230032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4767057193696183032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.05
@@ -33110,6 +33132,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1860067958}
     m_Modifications:
+    - target: {fileID: 4680618816855230032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4767057193696183032, guid: c789d679b705e48bb9c3a63ce230285f, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.05

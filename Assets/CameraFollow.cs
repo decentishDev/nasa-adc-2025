@@ -13,9 +13,9 @@ public class CameraFollow : MonoBehaviour
     public Transform spaceship;
     public float rotationSpeed = 10f;
     public float distance = 75f; 
-    private float currentRotationAngle = 0; 
+    public float currentRotationAngle = 0; 
 
-    private float verticalRotation = 0f;
+    public float verticalRotation = 180f;
 
     private Vector3 direction = new Vector3();
 
@@ -35,7 +35,7 @@ public class CameraFollow : MonoBehaviour
         if(cameraMode == 0f){
             transform.position = Vector3.Lerp(transform.position, new Vector3(-218f, -82f, -235f), SimVars.lerpConstant);
 
-            currentRotationAngle = 0f;
+            //currentRotationAngle = 0f;
 
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), SimVars.lerpConstant);
             
