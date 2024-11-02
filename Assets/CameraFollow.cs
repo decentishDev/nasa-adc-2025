@@ -33,7 +33,7 @@ public class CameraFollow : MonoBehaviour
     void Update(){
 
         if(cameraMode == 0f){
-            transform.position = Vector3.Lerp(transform.position, new Vector3(-218f, -82f, -235f), SimVars.lerpConstant);
+            transform.position = Vector3.Lerp(transform.position, new Vector3(-215f, -80f, -260f), SimVars.lerpConstant);
 
             //currentRotationAngle = 0f;
 
@@ -119,7 +119,7 @@ public class CameraFollow : MonoBehaviour
             cameraMode = 0f;
         }
 
-        modeText.text = "Camera: " + cameraModes[(int) cameraMode];
+        modeText.text = cameraModes[(int) cameraMode];
     }
 }
 

@@ -13,8 +13,14 @@ public class SimVars : MonoBehaviour {
     public TMP_InputField speedInputField;
 
     public TextMeshProUGUI TimeText;
-    public TextMeshProUGUI PositionText;
-    public TextMeshProUGUI VelocityText;
+    public TextMeshProUGUI PositionXText;
+    public TextMeshProUGUI PositionYText;
+    public TextMeshProUGUI PositionZText;
+    public TextMeshProUGUI VelocityXText;
+    public TextMeshProUGUI VelocityYText;
+    public TextMeshProUGUI VelocityZText;
+    public TextMeshProUGUI totalDistanceText;
+
     public LineRenderer trailRenderer;
     public LineRenderer moonTrailRenderer;
 
@@ -38,7 +44,7 @@ public class SimVars : MonoBehaviour {
     public static float ds34 = 0f;
     public TextMeshProUGUI ds34Text;
 
-    public TextMeshProUGUI totalDistanceText;
+    
 
     public static Vector3 rMoon;
     public static Vector3 vMoon;
@@ -188,14 +194,16 @@ public class SimVars : MonoBehaviour {
         }
         rMoon = allMoonR[currentRow];
         vMoon = allMoonV[currentRow];
-
-        PositionText.text = $"Position: ({(int) (r.x * 1000f)}, {(int) (r.y * 1000f)}, {(int) (r.z * 1000f)})";
-        VelocityText.text = $"Velocity: <{Mathf.Round(v.x * 1000f * 100f) * 0.01f}, {Mathf.Round(v.y * 1000f * 100f) * 0.01f}, {Mathf.Round(v.z * 1000f * 100f) * 0.01f}>";
-
+        PositionXText.text = $"{(int) (r.x * 1000f)},";
+        PositionYText.text = $"{(int) (r.y * 1000f)},";
+        PositionZText.text = $"{(int) (r.z * 1000f)}";
+        VelocityXText.text = $"{Mathf.Round(v.x * 1000f * 1000f) * 0.001f},";
+        VelocityYText.text = $"{Mathf.Round(v.y * 1000f * 1000f) * 0.001f},";
+        VelocityZText.text = $"{Mathf.Round(v.z * 1000f * 1000f) * 0.001f}";
         if(allWPSA[currentRow] != 0){
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             wpsa = CalculateLinkBudget(12, allWPSA[currentRow]);
-            wpsaText.text = "WSPA data rate: " + ((int) wpsa).ToString() + " kbps" + ((wpsa > 10000) ? " (max 10,000 kbps)" : "");
+            wpsaText.text = "WSPA: " + ((int) wpsa).ToString() + " kbps" + ((wpsa > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             wpsa = 0f;
@@ -204,7 +212,7 @@ public class SimVars : MonoBehaviour {
         if(allDS54[currentRow] != 0){
             ds54Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             ds54 = CalculateLinkBudget(34, allDS54[currentRow]);
-            ds54Text.text = "DS54 data rate: " + ((int) ds54).ToString() + " kbps" + ((ds54 > 10000) ? " (max 10,000 kbps)" : "");
+            ds54Text.text = "DS54: " + ((int) ds54).ToString() + " kbps" + ((ds54 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds54Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds54 = 0f;
@@ -213,7 +221,7 @@ public class SimVars : MonoBehaviour {
         if(allDS24[currentRow] != 0){
             ds24Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             ds24 = CalculateLinkBudget(34, allDS24[currentRow]);
-            ds24Text.text = "DS24 data rate: " + ((int) ds24).ToString() + " kbps" + ((ds24 > 10000) ? " (max 10,000 kbps)" : "");
+            ds24Text.text = "DS24: " + ((int) ds24).ToString() + " kbps" + ((ds24 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds24Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds24 = 0f;
@@ -222,7 +230,7 @@ public class SimVars : MonoBehaviour {
         if(allDS34[currentRow] != 0){
             ds34Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             ds34 = CalculateLinkBudget(34, allDS34[currentRow]);
-            ds34Text.text = "DS34 data rate: " + ((int) ds34).ToString() + " kbps" + ((ds34 > 10000) ? " (max 10,000 kbps)" : "");
+            ds34Text.text = "DS34 : " + ((int) ds34).ToString() + " kbps" + ((ds34 > 10000) ? " (max 10,000 kbps)" : "");
         }else{
             ds34Text.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
             ds34 = 0f;
@@ -242,7 +250,7 @@ public class SimVars : MonoBehaviour {
             ds34Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
         }
 
-        totalDistanceText.text = "Total distance travelled: " + ((int) allTotalDistance[currentRow]) + "km";
+        totalDistanceText.text = "Total distance traveled: \n" + ((int) allTotalDistance[currentRow]) + " km";
     }
 
     void Update(){
@@ -262,7 +270,7 @@ public class SimVars : MonoBehaviour {
             
         }
 
-        TimeText.text = "t = " + (Mathf.Round((float) time * 100f) * 0.01f).ToString() + FormatTime((float) time);
+        TimeText.text = $"Time elapsed: {FormatTime((float) time)}\nt = {Mathf.Round((float) time * 100f) * 0.01f} s";
 
         if(RenderingTrail){
             trailRenderer.gameObject.SetActive(true);
@@ -341,26 +349,12 @@ public class SimVars : MonoBehaviour {
         return Bn;
     }
 
-    public string FormatTime(float totalSeconds){
+    public static string FormatTime(float totalSeconds) {
         int days = (int)(totalSeconds / 86400);
-        totalSeconds %= 86400;
-
-        int hours = (int)(totalSeconds / 3600);
-        totalSeconds %= 3600;
-
-        int minutes = (int)(totalSeconds / 60);
+        int hours = (int)((totalSeconds % 86400) / 3600);
+        int minutes = (int)((totalSeconds % 3600) / 60);
         int seconds = (int)(totalSeconds % 60);
 
-        string result = "";
-
-        if (minutes == 0) return result;
-        result += " (";
-
-        if (days > 0) result += string.Format("{0:D2} days, ", days);
-        if (hours > 0) result += string.Format("{0:D2} hours, ", hours);
-
-        result += string.Format("{0:D2} minutes, {1:D2} seconds)", minutes, seconds);
-
-        return result;
+        return $"{days:D2} : {hours:D2} : {minutes:D2} : {seconds:D2}";
     }
 }
