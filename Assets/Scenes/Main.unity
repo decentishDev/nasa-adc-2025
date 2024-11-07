@@ -1669,7 +1669,10 @@ MonoBehaviour:
   csvFileExtra: {fileID: 4900000, guid: 1ed46a637355d274ab2d7c9609ac8e93, type: 3}
   rowSlider: {fileID: 1375806702}
   speedInputMenu: {fileID: 918620414}
+  sliderCheckbox: {fileID: 796583392}
+  minimap: {fileID: 835215003}
   speedInputField: {fileID: 56553844}
+  MissionStatusText: {fileID: 766430360}
   TimeText: {fileID: 813781544}
   PositionXText: {fileID: 1915147939}
   PositionYText: {fileID: 193664991}
@@ -16408,7 +16411,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Perigree raise maneuver
+  m_text: Orbiting Earth
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 70ad9820a4d264bd087c0c2a92ceb9d4, type: 2}
   m_sharedMaterial: {fileID: -5032901151383554005, guid: 70ad9820a4d264bd087c0c2a92ceb9d4, type: 2}
@@ -20286,9 +20289,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1596223783}
-        m_TargetAssemblyTypeName: CameraFollow, Assembly-CSharp
-        m_MethodName: SwitchCameraMode
+      - m_Target: {fileID: 307284929}
+        m_TargetAssemblyTypeName: SimVars, Assembly-CSharp
+        m_MethodName: SimulationToggle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

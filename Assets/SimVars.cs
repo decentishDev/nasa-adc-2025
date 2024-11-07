@@ -10,7 +10,11 @@ public class SimVars : MonoBehaviour {
     public TextAsset csvFileExtra;
     public Slider rowSlider;
     public GameObject speedInputMenu;
+    public GameObject sliderCheckbox;
+    public GameObject minimap;
     public TMP_InputField speedInputField;
+
+    public TextMeshProUGUI MissionStatusText;
 
     public TextMeshProUGUI TimeText;
     public TextMeshProUGUI PositionXText;
@@ -67,6 +71,7 @@ public class SimVars : MonoBehaviour {
     public static bool enlargedProportions = false;
 
     public static bool cameraZoomer = false;
+    public static bool isSimulation = true;
 
     public static bool flamer = false;
 
@@ -251,6 +256,16 @@ public class SimVars : MonoBehaviour {
         }
 
         totalDistanceText.text = "Total distance traveled: \n" + ((int) allTotalDistance[currentRow]) + " km";
+
+        if(time < 90000){
+            MissionStatusText.text = "Orbiting Earth";
+        }else if(time < 430000){
+            MissionStatusText.text = "On the way to the Moon";
+        }else if(time < 770000){
+            MissionStatusText.text = "Returning to Earth";
+        }else{
+            MissionStatusText.text = "Entry, Descent, and Landing";
+        }
     }
 
     void Update(){
@@ -305,6 +320,19 @@ public class SimVars : MonoBehaviour {
 
     public void SizeToggle(){
         enlargedProportions = !enlargedProportions;
+    }
+    public void SimulationToggle(){
+        isSimulation = !isSimulation;
+        minimap.SetActive(isSimulation);
+        sliderCheckbox.SetActive(!isSimulation);
+        if(isSimulation){
+            rowSlider.gameObject.SetActive(false);
+            speedInputMenu.SetActive(false);
+        }else{
+            rowSlider.gameObject.SetActive(TSliderActive);
+            rowSlider.value = (float) time;
+            speedInputMenu.SetActive(!TSliderActive);
+        }
     }
 
     public void CameraZoom(){
