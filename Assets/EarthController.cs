@@ -14,7 +14,7 @@ public class EarthController : MonoBehaviour {
 
     void Update(){
         if(SimVars.enlargedProportions){
-            idealScale = new Vector3(0.1f, 0.1f, 0.1f);
+            idealScale = new Vector3(0.06f, 0.06f, 0.06f);
         }else{
             idealScale = new Vector3(0.02477213f, 0.02477213f, 0.02477213f);
         }

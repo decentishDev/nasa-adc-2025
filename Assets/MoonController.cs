@@ -31,7 +31,7 @@ public class MoonController : MonoBehaviour {
         }
 
         if(SimVars.enlargedProportions){
-            idealScale = new Vector3(5f, 5f, 5f);
+            idealScale = new Vector3(3f, 3f, 3f);
         }else{
             idealScale = new Vector3(1f, 1f, 1f);
         }

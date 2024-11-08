@@ -59,6 +59,7 @@ public class SimVars : MonoBehaviour {
 
     private float[] allT = new float[12981];
     private Vector3[] allR = new Vector3[12981];
+    private Vector3[] allExpandedR = new Vector3[12981];
     private Vector3[] allV = new Vector3[12981];
     private float[] allM = new float[12981];
     private float[] allWPSA = new float[12981];
@@ -133,6 +134,34 @@ public class SimVars : MonoBehaviour {
             allDS34[i - 1] = fieldsF[15];
             allMoonR[i - 1] = new Vector3(fieldsExtraF[14], fieldsExtraF[15], fieldsExtraF[16]) / 1000f;
             allMoonV[i - 1] = new Vector3(fieldsExtraF[17], fieldsExtraF[18], fieldsExtraF[19]) / 1000f;
+
+            Vector3 currentPosition = thisR / 1000f;
+
+            Vector3 F1 = new Vector3(-375, -129, -61);
+            Vector3 F2 = new Vector3(0, 0, 0);
+
+            float expansionFactorF1 = 25f;
+            float expansionFactorF2 = 150f;
+
+            float d1 = Vector3.Distance(currentPosition, F1);
+            float d2 = Vector3.Distance(currentPosition, F2);
+
+            float power = 0.5f;
+            float w1 = 1f / Mathf.Pow(d1 + 0.01f, power);
+            float w2 = 1f / Mathf.Pow(d2 + 0.01f, power);
+
+            float sumWeights = w1 + w2;
+            w1 /= sumWeights;
+            w2 /= sumWeights;
+
+            Vector3 directionFromF1 = (currentPosition - F1).normalized;
+            Vector3 directionFromF2 = (currentPosition - F2).normalized;
+
+            Vector3 targetPosition = currentPosition + expansionFactorF1 * w1 * directionFromF1 + expansionFactorF2 * w2 * directionFromF2;
+
+            float lerpFactor = 0.1f;
+            allExpandedR[i - 1] = Vector3.Lerp(currentPosition, targetPosition, lerpFactor);
+
             
             if(i > 1){
                 allTotalDistance[i - 1] = allTotalDistance[i - 2] + (thisR - previousR).magnitude;
@@ -193,7 +222,11 @@ public class SimVars : MonoBehaviour {
             time = (decimal) tValue;
         }
         //time = tValue;
-        r = allR[currentRow];
+        if(enlargedProportions){
+            r = allExpandedR[currentRow];
+        }else{
+            r = allR[currentRow];
+        }
         v = allV[currentRow];
         if(currentRow != 0){
             lastV = allV[currentRow - 1];
@@ -309,7 +342,11 @@ public class SimVars : MonoBehaviour {
             moonTrailRenderer.gameObject.SetActive(true);
             
             Vector3[] subArray = new Vector3[currentRow + 1];
-            Array.Copy(allR, subArray, currentRow + 1);
+            if(enlargedProportions){
+                Array.Copy(allExpandedR, subArray, currentRow + 1);
+            }else{
+                Array.Copy(allR, subArray, currentRow + 1);
+            }
 
             Vector3[] moonSubArray = new Vector3[currentRow + 1];
             Array.Copy(allMoonR, moonSubArray, currentRow + 1);
@@ -336,6 +373,7 @@ public class SimVars : MonoBehaviour {
 
     public void SizeToggle(){
         enlargedProportions = !enlargedProportions;
+        UpdateRow((float) time);
     }
     public void SimulationToggle(){
         isSimulation = !isSimulation;
