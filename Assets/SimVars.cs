@@ -12,6 +12,9 @@ public class SimVars : MonoBehaviour {
     public GameObject speedInputMenu;
     public GameObject sliderCheckbox;
     public GameObject minimap;
+    public RectTransform minimapLine;
+    public RectTransform minimapSymbol;
+    public TextMeshProUGUI dataModeLabel;
     public TMP_InputField speedInputField;
 
     public TextMeshProUGUI MissionStatusText;
@@ -33,7 +36,7 @@ public class SimVars : MonoBehaviour {
 
     public static float AutoTimeSpeed = 10f;
 
-    public static double time = 0;
+    public decimal time = 0m;
     public static Vector3 r;
     public static Vector3 v;
     public static Vector3 lastV;
@@ -71,7 +74,7 @@ public class SimVars : MonoBehaviour {
     public static bool enlargedProportions = false;
 
     public static bool cameraZoomer = false;
-    public static bool isSimulation = true;
+    public static bool isSimulation = false;
 
     public static bool flamer = false;
 
@@ -186,8 +189,8 @@ public class SimVars : MonoBehaviour {
         
         currentRow = findRow(tValue);
         
-        if(TSliderActive){
-            time = tValue;
+        if(TSliderActive && !isSimulation){
+            time = (decimal) tValue;
         }
         //time = tValue;
         r = allR[currentRow];
@@ -270,22 +273,36 @@ public class SimVars : MonoBehaviour {
 
     void Update(){
         lerpConstant = 10f * Time.deltaTime;
+        decimal deltaT = (decimal) Time.deltaTime;
 
-        if(!TSliderActive){
-            time += Time.deltaTime * AutoTimeSpeed;
+        if(isSimulation){
             
-            if(time > maxTime){
-                time = minTime;
+            time += deltaT;
+
+            if((float) time > maxTime){
+                time = (decimal) minTime;
             }
-            if(time < minTime){
-                time = maxTime;
+            if((float) time < minTime){
+                time = (decimal) maxTime;
             }
             UpdateRow((float) time);
-        }else{
+            float width = (float) minimapLine.rect.width - minimapSymbol.rect.width * 0.5f;
+            float fTime = (float) time;
+            minimapSymbol.anchoredPosition = new Vector2((width * (fTime / maxTime)) - (width / 2f), minimapSymbol.anchoredPosition.y);
+
+        }else if(!TSliderActive){
+            time += deltaT * ((decimal) AutoTimeSpeed);
             
+            if((float) time > maxTime){
+                time = (decimal) minTime;
+            }
+            if((float) time < minTime){
+                time = (decimal) maxTime;
+            }
+            UpdateRow((float) time);
         }
 
-        TimeText.text = $"Time elapsed: {FormatTime((float) time)}\nt = {Mathf.Round((float) time * 100f) * 0.01f} s";
+        TimeText.text = $"Time elapsed: {FormatTime((float) time)}\nt = {Math.Round(time, 2)} s";
 
         if(RenderingTrail){
             trailRenderer.gameObject.SetActive(true);
@@ -308,7 +325,6 @@ public class SimVars : MonoBehaviour {
             trailRenderer.gameObject.SetActive(false);
             moonTrailRenderer.gameObject.SetActive(false);
         }
-
     }
 
     public void TSliderToggle(){
@@ -328,10 +344,12 @@ public class SimVars : MonoBehaviour {
         if(isSimulation){
             rowSlider.gameObject.SetActive(false);
             speedInputMenu.SetActive(false);
+            dataModeLabel.text = "Simulation";
         }else{
             rowSlider.gameObject.SetActive(TSliderActive);
             rowSlider.value = (float) time;
             speedInputMenu.SetActive(!TSliderActive);
+            dataModeLabel.text = "Data explorer";
         }
     }
 
@@ -340,7 +358,8 @@ public class SimVars : MonoBehaviour {
             cameraZoomer = false;
         } else {
             cameraZoomer = true;
-        }    }
+        }
+    }
 
     public void FlameOn(){
         if(flamer) {

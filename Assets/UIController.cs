@@ -11,9 +11,9 @@ public class UIController : MonoBehaviour{
     public GameObject settingsMenu;
 
     void Start(){
-        sizeSlider.minValue = -2500f;
+        sizeSlider.minValue = -3000f;
         sizeSlider.maxValue = -500f;
-        sizeSlider.value = -1080f;
+        sizeSlider.value = -1500f;
     }
 
     public void SizeChanged(){

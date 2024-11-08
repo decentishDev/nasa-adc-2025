@@ -27,7 +27,11 @@ public class ArtemisController : MonoBehaviour {
                 lastPos = newPos;
                 transform.position = newPos;
             }else{
-                transform.position += SimVars.v * (SimVars.AutoTimeSpeed * Time.deltaTime);
+                if(SimVars.isSimulation){
+                    transform.position += SimVars.v * Time.deltaTime;
+                }else{
+                    transform.position += SimVars.v * (SimVars.AutoTimeSpeed * Time.deltaTime);
+                }
             }
         }
 

@@ -22,7 +22,11 @@ public class MoonController : MonoBehaviour {
                 lastPos = newPos;
                 transform.position = newPos;
             }else{
-                transform.position += SimVars.vMoon * (SimVars.AutoTimeSpeed * Time.deltaTime);
+                if(SimVars.isSimulation){
+                    transform.position += SimVars.vMoon * Time.deltaTime;
+                }else{
+                    transform.position += SimVars.vMoon * (SimVars.AutoTimeSpeed * Time.deltaTime);
+                }
             }
         }
 
