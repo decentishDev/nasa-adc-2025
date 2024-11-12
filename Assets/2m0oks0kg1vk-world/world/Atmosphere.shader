@@ -111,70 +111,90 @@ Shader "Custom/Atmosphere"
             }
 
             fixed4 frag(v2f i) : SV_Target
-            {
-                if (_PlanetRadius > _AtmosphereRadius) _PlanetRadius = _AtmosphereRadius - 2;
-                if (_AtmosphereRadius < 0) _AtmosphereRadius = 1;
+{
+    if (_PlanetRadius > _AtmosphereRadius) _PlanetRadius = _AtmosphereRadius - 2;
+    if (_AtmosphereRadius < 0) _AtmosphereRadius = 1;
 
-                float3 rsRGB = float3(_RayleighScattering.xyz);
-                float msRGB = _MieScattering.x;
-                float rSH = _RayleighScattering.w;
-                float mSH = _MieScattering.w;
+    // Constants for Rayleigh and Mie scattering
+    float3 rsRGB = float3(_RayleighScattering.xyz);
+    float msRGB = _MieScattering.x;
+    float rSH = _RayleighScattering.w;
+    float mSH = _MieScattering.w;
 
-                i.viewDir = normalize(i.startPos - _WorldSpaceCameraPos.xyz);
-                i.startPos = _WorldSpaceCameraPos;
+    // Calculate view direction and starting position
+    i.viewDir = normalize(i.startPos - _WorldSpaceCameraPos.xyz);
+    i.startPos = _WorldSpaceCameraPos;
 
-                float t0,t1;
-                if (!SphereIntersect(i.startPos, i.viewDir, t0, t1, true)) discard;
+    // Calculate distance from the camera to the planet
+    float cameraDistance = length(i.startPos - _PlanetCenter);
 
-                float mu = dot(i.viewDir, normalize(-_LightDirection));
-                float g = _MieScattering.y;
-                float phaseR = 3.0 / (16.0 * PI) * (1 + mu * mu);
-                float phaseM = 3.0 / (8.0 * PI) * ((1.f - g * g) * (1.f + mu * mu)) / ((2.f + g * g) * pow(1.f + g * g - 2.f * g * mu, 1.5f));
+    // Calculate a distance-based intensity scale factor (use a logarithmic or exponential falloff)
+    float distanceScale = exp(-cameraDistance / 500.0); // Adjust 500.0 for better distance scaling
+    distanceScale = saturate(distanceScale);  // Clamp to [0, 1] range
 
-                float3 sumR, sumM;
-                float2 opticalDepth;
+    // Perform intersection test for the atmosphere sphere
+    float t0, t1;
+    if (!SphereIntersect(i.startPos, i.viewDir, t0, t1, true)) discard;
 
-                float3 p1 = i.startPos + i.viewDir * t0;
-                float l = t1 - t0;
-                float ds = l / _Steps;
-                float time = 0;
-                for (int e = 0; e < _Steps; e++)
-                {
-                    float3 p = p1 + i.viewDir * (time + ds * 0.5);
-                    float3 lrd = normalize(-_LightDirection);
+    float mu = dot(i.viewDir, normalize(-_LightDirection));
+    float g = _MieScattering.y;
+    float phaseR = 3.0 / (16.0 * PI) * (1 + mu * mu);
+    float phaseM = 3.0 / (8.0 * PI) * ((1.f - g * g) * (1.f + mu * mu)) / ((2.f + g * g) * pow(1.f + g * g - 2.f * g * mu, 1.5f));
 
-                    float lt0, lt1;
-                    SphereIntersect(p, lrd, lt0, lt1, false);
-                    float2 opticallightDepth;
-                    float3 lp1 = p + lrd * lt0;
-                    if (LightMarch(lp1, lrd, lt1 - lt0, opticallightDepth)) {
-                        float height = length(p - _PlanetCenter) - _PlanetRadius;
+    float3 sumR, sumM;
+    float2 opticalDepth;
 
-                        float hr = exp(-height / rSH) * ds;
-                        float hm = exp(-height / mSH) * ds;
+    // Initial point for atmosphere sampling
+    float3 p1 = i.startPos + i.viewDir * t0;
+    float l = t1 - t0;
+    float ds = l / _Steps;
+    float time = 0;
 
-                        opticalDepth.x += hr;
-                        opticalDepth.y += hm;
+    // Integrate the atmosphere's scattering effect
+    for (int e = 0; e < _Steps; e++)
+    {
+        float3 p = p1 + i.viewDir * (time + ds * 0.5);
+        float3 lrd = normalize(-_LightDirection);
 
-                        float3 tau = rsRGB * (opticalDepth.x + opticallightDepth.x) + msRGB * 1.1 * (opticalDepth.y + opticallightDepth.y);
-                        float3 attenuation = float3 (exp(-tau.x), exp(-tau.y), exp(-tau.z));
+        float lt0, lt1;
+        SphereIntersect(p, lrd, lt0, lt1, false);
+        float2 opticallightDepth;
+        float3 lp1 = p + lrd * lt0;
+        if (LightMarch(lp1, lrd, lt1 - lt0, opticallightDepth)) {
+            float height = length(p - _PlanetCenter) - _PlanetRadius;
 
-                        sumR += attenuation * hr;
-                        sumM += attenuation * hm;
-                    }
+            float hr = exp(-height / rSH) * ds;
+            float hm = exp(-height / mSH) * ds;
 
-                    time += ds;
-                }
+            opticalDepth.x += hr;
+            opticalDepth.y += hm;
 
-                float3 color = (sumR * rsRGB * phaseR + sumM * msRGB * phaseM) * _LightIntensity * _LightColor;
+            float3 tau = rsRGB * (opticalDepth.x + opticallightDepth.x) + msRGB * 1.1 * (opticalDepth.y + opticallightDepth.y);
+            float3 attenuation = float3 (exp(-tau.x), exp(-tau.y), exp(-tau.z));
 
-                float a = pow(saturate(sqrLength(_WorldSpaceCameraPos.xyz - i.wPos) - 0.4),2);
-                float a1 = (color.x + color.y + color.z) / 3;
-                if (a1 < _ClipThreshold)
-                    a1 = lerp(0, a1, a1 / _ClipThreshold);
+            sumR += attenuation * hr;
+            sumM += attenuation * hm;
+        }
 
-                return fixed4(color.xyz, min(a, a1) * 0.6);  // Adjusted fade-out for softer edges
-            }
+        time += ds;
+    }
+
+    // Calculate final color and apply distance scaling
+    float3 color = (sumR * rsRGB * phaseR + sumM * msRGB * phaseM) * _LightIntensity * _LightColor;
+
+    // Apply distance-based scaling to the final color
+    color *= distanceScale;
+
+    // Adjust alpha blending based on distance to smooth transition at far distances
+    float a = pow(saturate(sqrLength(_WorldSpaceCameraPos.xyz - i.wPos) - 0.4), 2);
+    float a1 = (color.x + color.y + color.z) / 3;
+    if (a1 < _ClipThreshold)
+        a1 = lerp(0, a1, a1 / _ClipThreshold);
+
+    return fixed4(color.xyz, min(a, a1) * 0.6);  // Apply fade-out for softer edges
+}
+
+
             ENDCG
         }
     }

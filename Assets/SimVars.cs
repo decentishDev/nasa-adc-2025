@@ -36,7 +36,7 @@ public class SimVars : MonoBehaviour {
 
     public static float AutoTimeSpeed = 10f;
 
-    public decimal time = 0m;
+    public static decimal time = 0m;
     public static Vector3 r;
     public static Vector3 v;
     public static Vector3 lastV;
