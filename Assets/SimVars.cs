@@ -28,7 +28,10 @@ public class SimVars : MonoBehaviour {
     public TextMeshProUGUI VelocityZText;
     public TextMeshProUGUI totalDistanceText;
 
-    public LineRenderer trailRenderer;
+    public LineRenderer trailRenderer1;
+    public LineRenderer trailRenderer2;
+    public LineRenderer trailRenderer3;
+    public LineRenderer trailRenderer4;
     public LineRenderer moonTrailRenderer;
 
     public GameObject loadingScreen;
@@ -295,12 +298,16 @@ public class SimVars : MonoBehaviour {
 
         if(time < 90000){
             MissionStatusText.text = "Orbiting Earth";
+            MissionStatusText.color = new Color(0f, 1f, 1f, 1f);
         }else if(time < 430000){
             MissionStatusText.text = "On the way to the Moon";
-        }else if(time < 770000){
+            MissionStatusText.color = new Color(0f, 1f, 0f, 1f);
+        }else if(time < 775000){
             MissionStatusText.text = "Returning to Earth";
+            MissionStatusText.color = new Color(1f, 1f, 0f, 1f);
         }else{
             MissionStatusText.text = "Entry, Descent, and Landing";
+            MissionStatusText.color = new Color(1f, 107f / 255f, 0f, 1f);
         }
     }
 
@@ -338,28 +345,65 @@ public class SimVars : MonoBehaviour {
         TimeText.text = $"Time elapsed: {FormatTime((float) time)}\nt = {Math.Round(time, 2)} s";
 
         if(RenderingTrail){
-            trailRenderer.gameObject.SetActive(true);
-            moonTrailRenderer.gameObject.SetActive(true);
+            trailRenderer1.gameObject.SetActive(true);
+            trailRenderer2.gameObject.SetActive(currentRow > 1495);
+            trailRenderer3.gameObject.SetActive(currentRow > 7163);
+            trailRenderer4.gameObject.SetActive(currentRow > 12912);
+
+            Vector3[] subArray;
             
-            Vector3[] subArray = new Vector3[currentRow + 1];
             if(enlargedProportions){
+                subArray = new Vector3[currentRow + 1];
                 Array.Copy(allExpandedR, subArray, currentRow + 1);
             }else{
+                subArray = new Vector3[currentRow + 1];
                 Array.Copy(allR, subArray, currentRow + 1);
             }
 
+            int segment1End = Mathf.Min(currentRow, 1496);
+            trailRenderer1.positionCount = segment1End + 1;
+            for(int i = 0; i <= segment1End; i++){
+                trailRenderer1.SetPosition(i, subArray[i]);
+            }
+
+            if(currentRow > 1495){
+                int segment2End = Mathf.Min(currentRow, 7164) - 1496;
+                trailRenderer2.positionCount = segment2End + 1;
+                for (int i = 0; i <= segment2End; i++){
+                    trailRenderer2.SetPosition(i, subArray[1496 + i]);
+                }
+            }
+
+            if(currentRow > 7163){
+                int segment3End = Mathf.Min(currentRow, 12913) - 7164;
+                trailRenderer3.positionCount = segment3End + 1;
+                for (int i = 0; i <= segment3End; i++)
+                {
+                    trailRenderer3.SetPosition(i, subArray[7164 + i]);
+                }
+            }
+
+            if(currentRow > 12912){
+                int segment4End = currentRow - 12913;
+                trailRenderer4.positionCount = segment4End + 1;
+                for (int i = 0; i <= segment4End; i++)
+                {
+                    trailRenderer4.SetPosition(i, subArray[12913 + i]);
+                }
+            }
+
+            moonTrailRenderer.gameObject.SetActive(true);
             Vector3[] moonSubArray = new Vector3[currentRow + 1];
             Array.Copy(allMoonR, moonSubArray, currentRow + 1);
-
-            trailRenderer.positionCount = currentRow + 1;
             moonTrailRenderer.positionCount = currentRow + 1;
-
-            for (int i = 0; i < currentRow + 1; i++) {
-                trailRenderer.SetPosition(i, subArray[i]);
+            for (int i = 0; i < currentRow + 1; i++){
                 moonTrailRenderer.SetPosition(i, moonSubArray[i]);
             }
         }else{
-            trailRenderer.gameObject.SetActive(false);
+            trailRenderer1.gameObject.SetActive(false);
+            trailRenderer2.gameObject.SetActive(false);
+            trailRenderer3.gameObject.SetActive(false);
+            trailRenderer4.gameObject.SetActive(false);
             moonTrailRenderer.gameObject.SetActive(false);
         }
     }
