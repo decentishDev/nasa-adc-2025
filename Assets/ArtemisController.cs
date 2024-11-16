@@ -14,6 +14,12 @@ public class ArtemisController : MonoBehaviour {
     public Transform RocketModel;
     private Vector3 idealScale = new Vector3(0.018f, 0.018f, 0.018f);
 
+    public bool ShowV = true;
+    public bool ShowA = true;
+
+    public GameObject SLSModel;
+    public GameObject OrionModel;
+
     void Start(){
         
     }
@@ -46,32 +52,36 @@ public class ArtemisController : MonoBehaviour {
             RocketModel.rotation = Quaternion.Slerp(transform.rotation, targetRotation, ActualRotSmooth);
         }
 
-        //Vector3 velocity = SimVars.v;
-        if(velocity.magnitude > 0.001f){
-            Vector3 normalizedVelocity = new Vector3(
-                Mathf.Sign(velocity.x) * Mathf.Abs(velocity.x),
-                Mathf.Sign(velocity.y) * Mathf.Abs(velocity.y), 
-                Mathf.Sign(velocity.z) * Mathf.Abs(velocity.z)
-            );
-            Quaternion targetRotation = Quaternion.LookRotation(normalizedVelocity);
-            vArrow.rotation = targetRotation;
-            vArrow.localScale = new Vector3(vArrow.localScale.x, vArrow.localScale.y, (1f - Mathf.Pow(5f, -1f * velocity.magnitude)) * 5f);
+        if(ShowA){
+            if(velocity.magnitude > 0.001f){
+                Vector3 normalizedVelocity = new Vector3(
+                    Mathf.Sign(velocity.x) * Mathf.Abs(velocity.x),
+                    Mathf.Sign(velocity.y) * Mathf.Abs(velocity.y), 
+                    Mathf.Sign(velocity.z) * Mathf.Abs(velocity.z)
+                );
+                Quaternion targetRotation = Quaternion.LookRotation(normalizedVelocity);
+                vArrow.rotation = targetRotation;
+                vArrow.localScale = new Vector3(vArrow.localScale.x, vArrow.localScale.y, (1f - Mathf.Pow(5f, -1f * velocity.magnitude)) * 5f);
+            }
         }
 
         Vector3 lastV = SimVars.lastV * 1000f;
-        Vector3 acceleration = (velocity - lastV) / 1f;
-        
-        if(SimVars.currentRow != 0f){
-            Vector3 normalizedA = new Vector3(
-                Mathf.Sign(acceleration.x) * Mathf.Abs(acceleration.x), 
-                Mathf.Sign(acceleration.y) * Mathf.Abs(acceleration.y), 
-                Mathf.Sign(acceleration.z) * Mathf.Abs(acceleration.z)
-            );
-            Quaternion targetRotationA = Quaternion.LookRotation(normalizedA);
-            aArrow.rotation = targetRotationA;
-            aArrow.localScale = new Vector3(aArrow.localScale.x, aArrow.localScale.y, (1f - Mathf.Pow(20f, -1000f * acceleration.magnitude)) * 3f);
-        }else{
-            aArrow.localScale = new Vector3(aArrow.localScale.x, aArrow.localScale.y, 0f);
+
+        if(ShowA){
+            Vector3 acceleration = (velocity - lastV) / 1f;
+            
+            if(SimVars.currentRow != 0f){
+                Vector3 normalizedA = new Vector3(
+                    Mathf.Sign(acceleration.x) * Mathf.Abs(acceleration.x), 
+                    Mathf.Sign(acceleration.y) * Mathf.Abs(acceleration.y), 
+                    Mathf.Sign(acceleration.z) * Mathf.Abs(acceleration.z)
+                );
+                Quaternion targetRotationA = Quaternion.LookRotation(normalizedA);
+                aArrow.rotation = targetRotationA;
+                aArrow.localScale = new Vector3(aArrow.localScale.x, aArrow.localScale.y, (1f - Mathf.Pow(20f, -1000f * acceleration.magnitude)) * 3f);
+            }else{
+                aArrow.localScale = new Vector3(aArrow.localScale.x, aArrow.localScale.y, 0f);
+            }
         }
 
         if(SimVars.enlargedProportions){
@@ -81,5 +91,18 @@ public class ArtemisController : MonoBehaviour {
         }
 
         RocketModel.localScale = Vector3.Lerp(RocketModel.localScale, idealScale, 0.2f);
+
+        SLSModel.SetActive(SimVars.time < 6000);
+        OrionModel.SetActive(SimVars.time >= 6000);
+    }
+
+    public void changeV(){
+        ShowV = !ShowV;
+        vArrow.gameObject.SetActive(ShowV);
+    }
+
+    public void changeA(){
+        ShowA = !ShowA;
+        aArrow.gameObject.SetActive(ShowA);
     }
 }
