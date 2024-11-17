@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class CameraFollow : MonoBehaviour
-{
+public class CameraFollow : MonoBehaviour {
 
     public static float cameraMode = 0f;
     public TextMeshProUGUI modeText;
@@ -27,8 +26,7 @@ public class CameraFollow : MonoBehaviour
     public float maxVerticalAngle = 80f;
 
 
-    void Start()
-    {
+    void Start(){
         
     }
 
@@ -36,8 +34,6 @@ public class CameraFollow : MonoBehaviour
 
         if(cameraMode == 0f){
             transform.position = Vector3.Lerp(transform.position, new Vector3(-215f, -80f, -260f), SimVars.lerpConstant);
-
-            //currentRotationAngle = 0f;
 
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), SimVars.lerpConstant);
             
@@ -49,31 +45,6 @@ public class CameraFollow : MonoBehaviour
         } else if (cameraMode == 2f) {
             HandleMouseInput();
             UpdateCameraPosition();
-
-            //  float horizontalInput = Input.GetAxis("Horizontal");
-            //  float verticalInput = Input.GetAxis("Vertical");
-
-
-            // //Vector3 direction = Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
-
-            // if (horizontalInput != 0f) {
-            //      currentRotationAngle -= horizontalInput * rotationSpeed * Time.deltaTime;
-            //      direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
-            //     //transform.position = spaceship.position + direction;
-            //     //transform.RotateAround(spaceship.position, Vector3.up, horizontalInput * Time.deltaTime);
-            //     transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
-
-            // }
-
-            // if (verticalInput != 0f) {
-            //     currentRotationAngle -= verticalInput * rotationSpeed * Time.deltaTime;
-            //     direction = new Vector3(0, Mathf.Sin(currentRotationAngle), Mathf.Cos(currentRotationAngle)) * distance;
-            //     transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
-
-            // }
-            // if(!SliderScript.sliderMoving){
-            //     transform.LookAt(spaceship.position);
-            // }
         }
     }
     void HandleMouseInput(){
@@ -94,15 +65,31 @@ public class CameraFollow : MonoBehaviour
             currentRotationAngle += delta.x * mouseSensitivity * Time.deltaTime;
             
             verticalRotation -= delta.y * mouseSensitivity * Time.deltaTime;
-        //    verticalRotation = Mathf.Clamp(verticalRotation, minVerticalAngle, maxVerticalAngle);
 
             lastMousePosition = Input.mousePosition;
         }
 
+        #if UNITY_IOS || UNITY_ANDROID
+        if (Input.touchCount == 2) {
+            Touch touch1 = Input.GetTouch(0);
+            Touch touch2 = Input.GetTouch(1);
+
+            Vector2 touch1PrevPos = touch1.position - touch1.deltaPosition;
+            Vector2 touch2PrevPos = touch2.position - touch2.deltaPosition;
+
+            float prevTouchDeltaMag = (touch1PrevPos - touch2PrevPos).magnitude;
+            float touchDeltaMag = (touch1.position - touch2.position).magnitude;
+
+            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+            distance = Mathf.Clamp(distance + deltaMagnitudeDiff * 0.5f, 10f, 200f);
+        }
+        #else
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if(scroll != 0){
+        if (scroll != 0) {
             distance = Mathf.Clamp(distance - scroll * 25f, 10f, 200f);
         }
+        #endif
     }
 
     void UpdateCameraPosition(){
@@ -130,15 +117,5 @@ public class CameraFollow : MonoBehaviour
 
         modeText.text = cameraModes[(int) cameraMode];
     }
-
-    // public bool sliderMoving(){
-    //     if (!SimVars.TSliderActive) {
-    //      return false; 
-    //     } else {
-
-    //         return true; 
-    //     }
-    // }
-
 }
 
