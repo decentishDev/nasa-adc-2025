@@ -32,7 +32,7 @@ public class CameraFollow : MonoBehaviour
         
     }
 
-    void Update(){
+    void LateUpdate(){
 
         if(cameraMode == 0f){
             transform.position = Vector3.Lerp(transform.position, new Vector3(-215f, -80f, -260f), SimVars.lerpConstant);
@@ -50,29 +50,30 @@ public class CameraFollow : MonoBehaviour
             HandleMouseInput();
             UpdateCameraPosition();
 
-             float horizontalInput = Input.GetAxis("Horizontal");
-             float verticalInput = Input.GetAxis("Vertical");
+            //  float horizontalInput = Input.GetAxis("Horizontal");
+            //  float verticalInput = Input.GetAxis("Vertical");
 
 
-            //Vector3 direction = Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
+            // //Vector3 direction = Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
 
-            if (horizontalInput != 0f) {
-                 currentRotationAngle -= horizontalInput * rotationSpeed * Time.deltaTime;
-                 direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
-                //transform.position = spaceship.position + direction;
-                //transform.RotateAround(spaceship.position, Vector3.up, horizontalInput * Time.deltaTime);
-                transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
+            // if (horizontalInput != 0f) {
+            //      currentRotationAngle -= horizontalInput * rotationSpeed * Time.deltaTime;
+            //      direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
+            //     //transform.position = spaceship.position + direction;
+            //     //transform.RotateAround(spaceship.position, Vector3.up, horizontalInput * Time.deltaTime);
+            //     transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
 
-            }
+            // }
 
-            if (verticalInput != 0f) {
-                currentRotationAngle -= verticalInput * rotationSpeed * Time.deltaTime;
-                direction = new Vector3(0, Mathf.Sin(currentRotationAngle), Mathf.Cos(currentRotationAngle)) * distance;
-                transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
+            // if (verticalInput != 0f) {
+            //     currentRotationAngle -= verticalInput * rotationSpeed * Time.deltaTime;
+            //     direction = new Vector3(0, Mathf.Sin(currentRotationAngle), Mathf.Cos(currentRotationAngle)) * distance;
+            //     transform.position = Vector3.Lerp(transform.position, spaceship.position + direction, SimVars.lerpConstant);
 
-            }
-
-            transform.LookAt(spaceship.position);
+            // }
+            // if(!SliderScript.sliderMoving){
+            //     transform.LookAt(spaceship.position);
+            // }
         }
     }
     void HandleMouseInput(){
@@ -116,8 +117,9 @@ public class CameraFollow : MonoBehaviour
 
         transform.position = Vector3.Lerp(transform.position, targetPosition, SimVars.lerpConstant);
         
-        transform.LookAt(spaceship.position);
-
+        if(!SliderScript.sliderMoving){
+            transform.LookAt(spaceship.position);
+        }
     }
 
     public void SwitchCameraMode(){
