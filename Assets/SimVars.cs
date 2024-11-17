@@ -8,7 +8,7 @@ using TMPro;
 public class SimVars : MonoBehaviour {
     public TextAsset csvFile;
     public TextAsset csvFileExtra;
-    public Slider rowSlider;
+    public Slider rowSlider; 
     public GameObject speedInputMenu;
     public GameObject sliderCheckbox;
     public GameObject minimap;
@@ -81,7 +81,6 @@ public class SimVars : MonoBehaviour {
     public static bool isSimulation = false;
 
     public static bool flamer = false;
-
 
     public float minTime = 0;
     public float maxTime = 0;

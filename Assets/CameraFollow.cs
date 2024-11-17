@@ -1,3 +1,4 @@
+using System.Net.Sockets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,7 @@ public class CameraFollow : MonoBehaviour
     public float minVerticalAngle = -80;
     public float maxVerticalAngle = 80f;
 
+
     void Start()
     {
         
@@ -48,8 +50,9 @@ public class CameraFollow : MonoBehaviour
             HandleMouseInput();
             UpdateCameraPosition();
 
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
+             float horizontalInput = Input.GetAxis("Horizontal");
+             float verticalInput = Input.GetAxis("Vertical");
+
 
             //Vector3 direction = Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
 
@@ -73,11 +76,15 @@ public class CameraFollow : MonoBehaviour
         }
     }
     void HandleMouseInput(){
-        if(Input.GetMouseButtonDown(0)){
-            isDragging = true;
-            lastMousePosition = Input.mousePosition;
-        }else if (Input.GetMouseButtonUp(0)){
-            isDragging = false;
+        if (!SliderScript.sliderMoving) {
+            if(Input.GetMouseButtonDown(0)){
+                isDragging = true;
+                lastMousePosition = Input.mousePosition;
+            } else if (Input.GetMouseButtonUp(0)){
+                isDragging = false;
+            }
+        } else {
+            isDragging = false; 
         }
 
         if(isDragging){
@@ -121,5 +128,15 @@ public class CameraFollow : MonoBehaviour
 
         modeText.text = cameraModes[(int) cameraMode];
     }
+
+    // public bool sliderMoving(){
+    //     if (!SimVars.TSliderActive) {
+    //      return false; 
+    //     } else {
+
+    //         return true; 
+    //     }
+    // }
+
 }
 
