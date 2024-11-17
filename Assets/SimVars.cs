@@ -36,6 +36,7 @@ public class SimVars : MonoBehaviour {
 
     public GameObject loadingScreen;
     public RectTransform loadingBar;
+    public Image blackOverlay;
 
     public static float AutoTimeSpeed = 10f;
 
@@ -94,6 +95,21 @@ public class SimVars : MonoBehaviour {
 
     void Start(){
         StartCoroutine(ParseDataAndInitializeUI());
+        StartCoroutine(FadeInLoading(1f));
+    }
+
+    IEnumerator FadeInLoading(float startAlpha){
+        float duration = 1f;
+        float elapsed = 0f;
+
+        while (elapsed < duration){
+            elapsed += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, 0f, elapsed / duration);
+            blackOverlay.color = new Color(0f, 0f, 0f, newAlpha);
+            yield return null;
+        }
+
+        blackOverlay.color = new Color(0f, 0f, 0f, 0f);
     }
 
     IEnumerator ParseDataAndInitializeUI(){
