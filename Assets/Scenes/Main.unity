@@ -49671,7 +49671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74787a794d28648cdb1495c2c72d6fdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EarthModel: {fileID: 1368911463}
+  EarthModel: {fileID: 1147619091}
   EarthModelRend: {fileID: 1368911465}
   magn: 0
   EarthMat: {fileID: 2100000, guid: 1de7edf0a4c3d43d1b9bdfba14c5b382, type: 2}
