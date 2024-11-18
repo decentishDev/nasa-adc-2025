@@ -11,6 +11,8 @@ public class EarthController : MonoBehaviour {
     public Material AtmoMat;
     public Transform DirectionalLight;
     private float opacity = 0.6f;
+    public bool realisticLights = false;
+    public Transform RotationHelper;
 
     void Start(){
         
@@ -39,5 +41,17 @@ public class EarthController : MonoBehaviour {
         Vector3 lightDir = -DirectionalLight.forward;
         EarthMat.SetVector("_LightDirection", new Vector4(lightDir.x, lightDir.y, lightDir.z, 0));
         AtmoMat.SetVector("_LightDirection", new Vector4(lightDir.x, lightDir.y, lightDir.z, 0));
+        
+        float rotationAngle = ((float) SimVars.time / 86400f) * 360f;
+        RotationHelper.localRotation = Quaternion.Euler(0, -rotationAngle, 0);
+        if(realisticLights){
+            DirectionalLight.rotation = Quaternion.Euler(11f, -157.7f, 11f);
+        }else{
+            DirectionalLight.rotation = Quaternion.Euler(20f, -280f, 0f);
+        }
+    }
+
+    public void changeLights(){
+        realisticLights = !realisticLights;
     }
 }
