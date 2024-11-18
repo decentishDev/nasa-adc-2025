@@ -82,7 +82,7 @@ public class CameraFollow : MonoBehaviour {
 
             float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-            distance = Mathf.Clamp(distance + deltaMagnitudeDiff * 0.5f, 10f, 200f);
+            distance = Mathf.Clamp(distance + deltaMagnitudeDiff * 0.3f, 10f, 200f);
         }
         #else
         float scroll = Input.GetAxis("Mouse ScrollWheel");
