@@ -34,7 +34,6 @@ public class CameraFollow : MonoBehaviour {
     }
 
     void LateUpdate(){
-
         if(cameraMode == 0f){
             miniMap = false;
             transform.position = Vector3.Lerp(transform.position, new Vector3(-215f, -80f, fullSystemZoom), SimVars.lerpConstant);
@@ -43,7 +42,7 @@ public class CameraFollow : MonoBehaviour {
             
             direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
 
-        }else if (cameraMode == 1f){
+        } else if (cameraMode == 1f) {
             miniMap = true; 
             transform.position = Vector3.Lerp(transform.position, new Vector3(0f, 0f, -75f) + SimVars.r, SimVars.lerpConstant);
 

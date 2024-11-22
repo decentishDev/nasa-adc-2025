@@ -46607,6 +46607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a49712d7bb604bdf8ebdbd5db3f7593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spaceship: {fileID: 1300767365}
 --- !u!81 &1102564695
 AudioListener:
   m_ObjectHideFlags: 0
