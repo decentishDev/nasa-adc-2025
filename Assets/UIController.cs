@@ -20,13 +20,13 @@ public class UIController : MonoBehaviour{
         scaler.referenceResolution = new Vector2(1920f, -1f * sizeSlider.value);
     }
 
-    public void EnterSettings(){
-        inSettings = true;
-        settingsMenu.SetActive(true);
-    }
-
-    public void ExitSettings(){
-        inSettings = false;
-        settingsMenu.SetActive(false);
+    public void SettingToggler(){
+        if (!inSettings) {
+            inSettings = true;
+            settingsMenu.SetActive(true);
+        } else {
+            inSettings = false;
+            settingsMenu.SetActive(false);
+        }
     }
 }

@@ -25,6 +25,8 @@ public class CameraFollow : MonoBehaviour {
     public float minVerticalAngle = -80;
     public float maxVerticalAngle = 80f;
 
+    public static float fullSystemZoom = -260f; 
+
 
     void Start(){
         
@@ -33,7 +35,7 @@ public class CameraFollow : MonoBehaviour {
     void LateUpdate(){
 
         if(cameraMode == 0f){
-            transform.position = Vector3.Lerp(transform.position, new Vector3(-215f, -80f, -260f), SimVars.lerpConstant);
+            transform.position = Vector3.Lerp(transform.position, new Vector3(-215f, -80f, fullSystemZoom), SimVars.lerpConstant);
 
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), SimVars.lerpConstant);
             
