@@ -7,6 +7,7 @@ public class FullSystemZoomScript : MonoBehaviour{
 
     public Slider sizeSlider;
 
+
     void Start(){
         sizeSlider.minValue = -350f;
         sizeSlider.maxValue = -230f;
@@ -14,7 +15,7 @@ public class FullSystemZoomScript : MonoBehaviour{
     }
 
     public void SizeChanged(){
-        CameraFollow.fullSystemZoom = sizeSlider.value; 
+        CameraFollow.fullSystemZoom = sizeSlider.value;    
     }
 
     void Update() {

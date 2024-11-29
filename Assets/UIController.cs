@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIController : MonoBehaviour{
+public class UIController : MonoBehaviour {
 
     public CanvasScaler scaler;
     public Slider sizeSlider;
@@ -16,17 +16,12 @@ public class UIController : MonoBehaviour{
         sizeSlider.value = -1500f;
     }
 
-    public void SizeChanged(){
+    public void SizeChanged() {
         scaler.referenceResolution = new Vector2(1920f, -1f * sizeSlider.value);
     }
 
-    public void SettingToggler(){
-        if (!inSettings) {
-            inSettings = true;
-            settingsMenu.SetActive(true);
-        } else {
-            inSettings = false;
-            settingsMenu.SetActive(false);
-        }
+    public void SettingToggler() {
+        settingsMenu.SetActive(inSettings ? false : true);
+        inSettings = !inSettings;
     }
 }
