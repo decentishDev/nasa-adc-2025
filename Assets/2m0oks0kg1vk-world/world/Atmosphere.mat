@@ -26,11 +26,11 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _AtmosphereRadius: 16.999998
+    - _AtmosphereRadius: 6.8
     - _ClipThreshold: 0
     - _LightIntensity: 3.17
     - _LightSteps: 10
-    - _PlanetRadius: 15.774997
+    - _PlanetRadius: 6.31
     - _Steps: 10
     m_Colors:
     - _LightColor: {r: 0.6949685, g: 0.8674191, b: 1, a: 1}
