@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class MiniArtemisController : MonoBehaviour {
     void LateUpdate(){
-        transform.position = SimVars.r;
+        transform.position = SimVars.allR[SimVars.currentRow];
     }
 }

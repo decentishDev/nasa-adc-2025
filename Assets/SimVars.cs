@@ -67,7 +67,7 @@ public class SimVars : MonoBehaviour {
     public bool RenderingTrail = true;
 
     private float[] allT = new float[12981];
-    private Vector3[] allR = new Vector3[12981];
+    public static Vector3[] allR = new Vector3[12981];
     private Vector3[] allExpandedR = new Vector3[12981];
     private Vector3[] allV = new Vector3[12981];
     private float[] allM = new float[12981];
