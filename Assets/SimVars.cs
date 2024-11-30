@@ -32,7 +32,12 @@ public class SimVars : MonoBehaviour {
     public LineRenderer trailRenderer2;
     public LineRenderer trailRenderer3;
     public LineRenderer trailRenderer4;
+    public LineRenderer fullTrailRenderer1;
+    public LineRenderer fullTrailRenderer2;
+    public LineRenderer fullTrailRenderer3;
+    public LineRenderer fullTrailRenderer4;
     public LineRenderer moonTrailRenderer;
+    public LineRenderer fullMoonTrailRenderer;
 
     public GameObject loadingScreen;
     public RectTransform loadingBar;
@@ -193,6 +198,7 @@ public class SimVars : MonoBehaviour {
             }
 
             loadingBar.offsetMax = new Vector2((((float) i) / ((float) data.Length)) * 500f - 500f, loadingBar.offsetMax.y);
+            
         }
 
         minTime = allT[0];
@@ -204,6 +210,43 @@ public class SimVars : MonoBehaviour {
         speedInputField.text = AutoTimeSpeed.ToString();
 
         UpdateRow(minTime);
+
+        Vector3[] subArray;
+            
+        subArray = new Vector3[12981];
+        Array.Copy(allR, subArray, 12981);
+
+        int segment1End = 1496;
+        fullTrailRenderer1.positionCount = segment1End + 1;
+        for(int i = 0; i <= segment1End; i++){
+            fullTrailRenderer1.SetPosition(i, subArray[i]);
+        }
+
+        int segment2End = 7164 - 1496;
+        fullTrailRenderer2.positionCount = segment2End + 1;
+        for (int i = 0; i <= segment2End; i++){
+            fullTrailRenderer2.SetPosition(i, subArray[1496 + i]);
+        }
+    
+        int segment3End = 12913 - 7164;
+        fullTrailRenderer3.positionCount = segment3End + 1;
+        for (int i = 0; i <= segment3End; i++){
+            fullTrailRenderer3.SetPosition(i, subArray[7163 + i]);//7164
+        }
+
+        int segment4End = 12980 - 12913;
+        fullTrailRenderer4.positionCount = segment4End + 1;
+        for (int i = 0; i <= segment4End; i++){
+            fullTrailRenderer4.SetPosition(i, subArray[12913 + i]);
+        }            
+
+        Vector3[] moonSubArray = new Vector3[12981];
+        Array.Copy(allMoonR, moonSubArray, 12981);
+        moonTrailRenderer.positionCount = 12981;
+        for (int i = 0; i < 12981; i++){
+            fullMoonTrailRenderer.SetPosition(i, moonSubArray[i]);
+        }
+
         loadingScreen.SetActive(false);
     }
 
@@ -366,12 +409,12 @@ public class SimVars : MonoBehaviour {
             trailRenderer4.gameObject.SetActive(currentRow > 12912);
 
             Vector3[] subArray;
-            
+
+            subArray = new Vector3[currentRow + 1];
+
             if(enlargedProportions){
-                subArray = new Vector3[currentRow + 1];
                 Array.Copy(allExpandedR, subArray, currentRow + 1);
             }else{
-                subArray = new Vector3[currentRow + 1];
                 Array.Copy(allR, subArray, currentRow + 1);
             }
 
