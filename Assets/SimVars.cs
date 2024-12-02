@@ -83,7 +83,7 @@ public class SimVars : MonoBehaviour {
     public static int currentRow = 0;
     public static bool TSliderActive = true;
     public static bool enlargedProportions = false;
-    public static bool usingLeastChanges = false;
+    public bool usingLeastChanges = false;
 
     public static bool cameraZoomer = false;
     public static bool isSimulation = false;
@@ -557,17 +557,21 @@ public class SimVars : MonoBehaviour {
     }
 
     public void ChangeHighestDataRate(){
-        HighestDataRateToggle.isOn = true;
-        LeastChangesToggle.isOn = false;
-
-        usingLeastChanges = false;
+        if(usingLeastChanges){
+            LeastChangesToggle.isOn = false;
+            usingLeastChanges = false;
+        }else{
+            HighestDataRateToggle.isOn = true;
+        }
     }
 
     public void ChangeLeastChanges(){
-        HighestDataRateToggle.isOn = false;
-        LeastChangesToggle.isOn = true;
-
-        usingLeastChanges = true;
+        if(usingLeastChanges){
+            LeastChangesToggle.isOn = true;
+        }else{
+            HighestDataRateToggle.isOn = false;
+            usingLeastChanges = true;
+        }
     }
 
     public float CalculateLinkBudget(float diameter, float range){

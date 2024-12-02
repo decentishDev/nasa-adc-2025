@@ -15385,8 +15385,8 @@ MonoBehaviour:
   loadingScreen: {fileID: 720274663}
   loadingBar: {fileID: 589302479}
   blackOverlay: {fileID: 1477885414}
-  HighestDataRateToggle: {fileID: 0}
-  LeastChangesToggle: {fileID: 0}
+  HighestDataRateToggle: {fileID: 278854830}
+  LeastChangesToggle: {fileID: 1780895307}
   wpsaText: {fileID: 560686467}
   ds54Text: {fileID: 179948903}
   ds24Text: {fileID: 219788070}
