@@ -43,6 +43,9 @@ public class SimVars : MonoBehaviour {
     public RectTransform loadingBar;
     public Image blackOverlay;
 
+    public Toggle HighestDataRateToggle;
+    public Toggle LeastChangesToggle;
+
     public static float AutoTimeSpeed = 10f;
 
     public static decimal time = 0m;
@@ -59,9 +62,6 @@ public class SimVars : MonoBehaviour {
     public TextMeshProUGUI ds24Text;
     public static float ds34 = 0f;
     public TextMeshProUGUI ds34Text;
-
-    
-
     public static Vector3 rMoon;
     public static Vector3 vMoon;
     public bool RenderingTrail = true;
@@ -78,15 +78,17 @@ public class SimVars : MonoBehaviour {
     private Vector3[] allMoonR = new Vector3[12981];
     private Vector3[] allMoonV = new Vector3[12981];
     private float[] allTotalDistance = new float[12981];
-    public static int currentRow = 0;
+    private int[] satellitesForLeastChanges = new int[12981];
 
+    public static int currentRow = 0;
     public static bool TSliderActive = true;
     public static bool enlargedProportions = false;
+    public static bool usingLeastChanges = false;
 
     public static bool cameraZoomer = false;
     public static bool isSimulation = false;
 
-    public static bool flamer = false;
+    public static bool flamer = true;
 
     public float minTime = 0;
     public float maxTime = 0;
@@ -121,6 +123,8 @@ public class SimVars : MonoBehaviour {
         string[] dataExtra = csvFileExtra.text.Split(new char[] {'\n'});
 
         Vector3 previousR = new Vector3(0f, 0f, 0f);
+
+        int currentSatellite = 0;
 
         for (int i = 1; i < data.Length; i++)
         {
@@ -198,7 +202,25 @@ public class SimVars : MonoBehaviour {
             }
 
             loadingBar.offsetMax = new Vector2((((float) i) / ((float) data.Length)) * 500f - 500f, loadingBar.offsetMax.y);
-            
+
+            bool WPSAavailable = allWPSA[i - 1] != 0f;
+            bool DS54available = allDS54[i - 1] != 0f;
+            bool DS24available = allDS24[i - 1] != 0f;
+            bool DS34available = allDS34[i - 1] != 0f;
+
+            bool[] available = {WPSAavailable, DS54available, DS24available, DS34available};
+
+            if(currentSatellite == -1 || !available[currentSatellite]){
+                for(int j = 0; j < 4; j++){
+                    if(available[j]){
+                        currentSatellite = j;
+                        break;
+                    }else if(j == 3){
+                        currentSatellite = -1;
+                    }
+                }
+            }
+            satellitesForLeastChanges[i - 1] = currentSatellite;
         }
 
         minTime = allT[0];
@@ -338,18 +360,36 @@ public class SimVars : MonoBehaviour {
             ds34 = 0f;
             ds34Text.text = "DS34 unavailable";
         }
-        
-        if(wpsa > ds54 && wpsa > ds24 && wpsa > ds34){
-            wpsaText.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
-        }
-        if(ds54 > wpsa && ds54 > ds24 && ds54 > ds34){
-            ds54Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
-        }
-        if(ds24 > wpsa && ds24 > ds54 && ds24 > ds34){
-            ds24Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
-        }
-        if(ds34 > wpsa && ds34 > ds54 && ds34 > ds24){
-            ds34Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+        if(usingLeastChanges){
+            switch (satellitesForLeastChanges[currentRow]){
+            case 0:
+                wpsaText.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+                break;
+            case 1:
+                ds54Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+                break;
+
+            case 2:
+                ds24Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+                break;
+
+            default:
+                ds34Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+                break;
+            }
+        }else{
+            if(wpsa > ds54 && wpsa > ds24 && wpsa > ds34){
+                wpsaText.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+            }
+            if(ds54 > wpsa && ds54 > ds24 && ds54 > ds34){
+                ds54Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+            }
+            if(ds24 > wpsa && ds24 > ds54 && ds24 > ds34){
+                ds24Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+            }
+            if(ds34 > wpsa && ds34 > ds54 && ds34 > ds24){
+                ds34Text.color = new Color(0.1f, 1.0f, 0.1f, 1.0f);
+            }
         }
 
         totalDistanceText.text = "Total distance traveled: \n" + ((int) allTotalDistance[currentRow]) + " km";
@@ -514,6 +554,20 @@ public class SimVars : MonoBehaviour {
             AutoTimeSpeed = 0f;
         }
         speedInputField.text = AutoTimeSpeed.ToString();
+    }
+
+    public void ChangeHighestDataRate(){
+        HighestDataRateToggle.isOn = true;
+        LeastChangesToggle.isOn = false;
+
+        usingLeastChanges = false;
+    }
+
+    public void ChangeLeastChanges(){
+        HighestDataRateToggle.isOn = false;
+        LeastChangesToggle.isOn = true;
+
+        usingLeastChanges = true;
     }
 
     public float CalculateLinkBudget(float diameter, float range){

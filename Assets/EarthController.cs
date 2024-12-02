@@ -45,7 +45,7 @@ public class EarthController : MonoBehaviour {
         float rotationAngle = ((float) SimVars.time / 86400f) * 360f;
         RotationHelper.localRotation = Quaternion.Euler(0, -rotationAngle, 0);
         if(realisticLights){
-            DirectionalLight.rotation = Quaternion.Euler(11f, -157.7f, 11f);
+            DirectionalLight.rotation = Quaternion.Euler(0f, -157.7f, 0f);
         }else{
             DirectionalLight.rotation = Quaternion.Euler(20f, -280f, 0f);
         }
