@@ -557,20 +557,16 @@ public class SimVars : MonoBehaviour {
     }
 
     public void ChangeHighestDataRate(){
-        if(usingLeastChanges){
-            LeastChangesToggle.isOn = false;
-            usingLeastChanges = false;
-        }else{
-            HighestDataRateToggle.isOn = true;
+        if(LeastChangesToggle.isOn == HighestDataRateToggle.isOn){
+            usingLeastChanges = !usingLeastChanges;
+            LeastChangesToggle.isOn = !HighestDataRateToggle.isOn;
         }
     }
 
     public void ChangeLeastChanges(){
-        if(usingLeastChanges){
-            LeastChangesToggle.isOn = true;
-        }else{
-            HighestDataRateToggle.isOn = false;
-            usingLeastChanges = true;
+        if(LeastChangesToggle.isOn == HighestDataRateToggle.isOn){
+            usingLeastChanges = !usingLeastChanges;
+            HighestDataRateToggle.isOn = !LeastChangesToggle.isOn;
         }
     }
 
