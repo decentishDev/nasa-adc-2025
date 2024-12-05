@@ -577,7 +577,7 @@ public class SimVars : MonoBehaviour {
         float etaR = 0.55f;
         float lambda = 0.136363636f;
         float kb = -228.6f;
-        float Ts = 22f;
+        float Ts = 222f;
 
         float part1 = Pt + Gt - Losses;
         float part2 = 10f * Mathf.Log10(etaR * Mathf.Pow((Mathf.PI * diameter) / lambda, 2));
