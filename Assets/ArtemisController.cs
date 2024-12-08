@@ -52,7 +52,7 @@ public class ArtemisController : MonoBehaviour {
             RocketModel.rotation = Quaternion.Slerp(transform.rotation, targetRotation, ActualRotSmooth);
         }
 
-        if(ShowA){
+        if(ShowV){
             if(velocity.magnitude > 0.001f){
                 Vector3 normalizedVelocity = new Vector3(
                     Mathf.Sign(velocity.x) * Mathf.Abs(velocity.x),

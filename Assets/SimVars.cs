@@ -27,11 +27,16 @@ public class SimVars : MonoBehaviour {
     public TextMeshProUGUI VelocityYText;
     public TextMeshProUGUI VelocityZText;
     public TextMeshProUGUI totalDistanceText;
+    public TextMeshProUGUI MassText;
 
     public LineRenderer trailRenderer1;
     public LineRenderer trailRenderer2;
     public LineRenderer trailRenderer3;
     public LineRenderer trailRenderer4;
+    public LineRenderer trailRenderer1Off;
+    public LineRenderer trailRenderer2Off;
+    public LineRenderer trailRenderer3Off;
+    public LineRenderer trailRenderer4Off;
     public LineRenderer fullTrailRenderer1;
     public LineRenderer fullTrailRenderer2;
     public LineRenderer fullTrailRenderer3;
@@ -50,6 +55,7 @@ public class SimVars : MonoBehaviour {
 
     public static decimal time = 0m;
     public static Vector3 r;
+    public static Vector3 rOff;
     public static Vector3 v;
     public static Vector3 lastV;
     public static float m = 0f;
@@ -69,6 +75,8 @@ public class SimVars : MonoBehaviour {
     private float[] allT = new float[12981];
     public static Vector3[] allR = new Vector3[12981];
     private Vector3[] allExpandedR = new Vector3[12981];
+    public static Vector3[] allROff = new Vector3[12981];
+    private Vector3[] allExpandedROff = new Vector3[12981];
     private Vector3[] allV = new Vector3[12981];
     private float[] allM = new float[12981];
     private float[] allWPSA = new float[12981];
@@ -94,6 +102,8 @@ public class SimVars : MonoBehaviour {
     public float maxTime = 0;
 
     public static float lerpConstant = 0.05f;
+
+    public static bool showingOffNominal = false;
 
     void Awake(){
         loadingScreen.SetActive(true);
@@ -126,10 +136,9 @@ public class SimVars : MonoBehaviour {
 
         int currentSatellite = 0;
 
-        for (int i = 1; i < data.Length; i++)
-        {
-            string[] fields = data[i].Split(new char[] {','});
-            string[] fieldsExtra = dataExtra[i].Split(new char[] {','});
+        for (int i = 1; i < dataExtra.Length; i++){
+            string[] fields = data[i].Split(new char[]{','});
+            string[] fieldsExtra = dataExtra[i].Split(new char[]{','});
             float[] fieldsF = new float[fields.Length];
             float[] fieldsExtraF = new float[fieldsExtra.Length];
 
@@ -149,10 +158,12 @@ public class SimVars : MonoBehaviour {
                 }
             }
 
-            Vector3 thisR = new Vector3(fieldsExtraF[1], fieldsExtraF[2], fieldsExtraF[3]);
+            Vector3 thisR = new Vector3(fieldsF[1], fieldsF[2], fieldsF[3]);
+            Vector3 thisROff = new Vector3(fieldsExtraF[1], fieldsExtraF[2], fieldsExtraF[3]);
             
             allT[i - 1] = fieldsF[0] * 60f;
             allR[i - 1] = thisR / 1000f;
+            allROff[i - 1] = thisROff / 1000f;
             allV[i - 1] = new Vector3(fieldsExtraF[4], fieldsExtraF[5], fieldsExtraF[6]) / 1000f;
             allM[i - 1] = fieldsF[7];
             allWPSA[i - 1] = fieldsF[9];
@@ -162,33 +173,8 @@ public class SimVars : MonoBehaviour {
             allMoonR[i - 1] = new Vector3(fieldsExtraF[14], fieldsExtraF[15], fieldsExtraF[16]) / 1000f;
             allMoonV[i - 1] = new Vector3(fieldsExtraF[17], fieldsExtraF[18], fieldsExtraF[19]) / 1000f;
 
-            Vector3 currentPosition = thisR / 1000f;
-
-            Vector3 F1 = new Vector3(-375, -129, -61);
-            Vector3 F2 = new Vector3(0, 0, 0);
-
-            float expansionFactorF1 = 25f;
-            float expansionFactorF2 = 150f;
-
-            float d1 = Vector3.Distance(currentPosition, F1);
-            float d2 = Vector3.Distance(currentPosition, F2);
-
-            float power = 0.5f;
-            float w1 = 1f / Mathf.Pow(d1 + 0.01f, power);
-            float w2 = 1f / Mathf.Pow(d2 + 0.01f, power);
-
-            float sumWeights = w1 + w2;
-            w1 /= sumWeights;
-            w2 /= sumWeights;
-
-            Vector3 directionFromF1 = (currentPosition - F1).normalized;
-            Vector3 directionFromF2 = (currentPosition - F2).normalized;
-
-            Vector3 targetPosition = currentPosition + expansionFactorF1 * w1 * directionFromF1 + expansionFactorF2 * w2 * directionFromF2;
-
-            float lerpFactor = 0.1f;
-            allExpandedR[i - 1] = Vector3.Lerp(currentPosition, targetPosition, lerpFactor);
-
+            allExpandedR[i - 1] = expandPoint(thisR / 1000f);
+            allExpandedROff[i - 1] = expandPoint(thisROff / 1000f);
             
             if(i > 1){
                 allTotalDistance[i - 1] = allTotalDistance[i - 2] + (thisR - previousR).magnitude;
@@ -272,6 +258,34 @@ public class SimVars : MonoBehaviour {
         loadingScreen.SetActive(false);
     }
 
+    private Vector3 expandPoint(Vector3 currentPosition){
+
+        Vector3 F1 = new Vector3(-375, -129, -61);
+        Vector3 F2 = new Vector3(0, 0, 0);
+
+        float expansionFactorF1 = 25f;
+        float expansionFactorF2 = 150f;
+
+        float d1 = Vector3.Distance(currentPosition, F1);
+        float d2 = Vector3.Distance(currentPosition, F2);
+
+        float power = 0.5f;
+        float w1 = 1f / Mathf.Pow(d1 + 0.01f, power);
+        float w2 = 1f / Mathf.Pow(d2 + 0.01f, power);
+
+        float sumWeights = w1 + w2;
+        w1 /= sumWeights;
+        w2 /= sumWeights;
+
+        Vector3 directionFromF1 = (currentPosition - F1).normalized;
+        Vector3 directionFromF2 = (currentPosition - F2).normalized;
+
+        Vector3 targetPosition = currentPosition + expansionFactorF1 * w1 * directionFromF1 + expansionFactorF2 * w2 * directionFromF2;
+
+        float lerpFactor = 0.1f;
+        return Vector3.Lerp(currentPosition, targetPosition, lerpFactor);
+    }
+
     private int findRow(float t){
         int low = 0;
         int high = allT.Length - 1;
@@ -307,8 +321,10 @@ public class SimVars : MonoBehaviour {
         //time = tValue;
         if(enlargedProportions){
             r = allExpandedR[currentRow];
+            rOff = allExpandedROff[currentRow];
         }else{
             r = allR[currentRow];
+            rOff = allROff[currentRow];
         }
         v = allV[currentRow];
         if(currentRow != 0){
@@ -316,6 +332,7 @@ public class SimVars : MonoBehaviour {
         }else{
             lastV = v;
         }
+        m = allM[currentRow];
         rMoon = allMoonR[currentRow];
         vMoon = allMoonV[currentRow];
         PositionXText.text = $"{(int) (r.x * 1000f)},";
@@ -324,6 +341,7 @@ public class SimVars : MonoBehaviour {
         VelocityXText.text = $"{Mathf.Round(v.x * 1000f * 1000f) * 0.001f},";
         VelocityYText.text = $"{Mathf.Round(v.y * 1000f * 1000f) * 0.001f},";
         VelocityZText.text = $"{Mathf.Round(v.z * 1000f * 1000f) * 0.001f}";
+        MassText.text = $"Mass: {m} kg";
         if(allWPSA[currentRow] != 0){
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             wpsa = CalculateLinkBudget(12, allWPSA[currentRow]);
@@ -447,46 +465,69 @@ public class SimVars : MonoBehaviour {
             trailRenderer2.gameObject.SetActive(currentRow > 1495);
             trailRenderer3.gameObject.SetActive(currentRow > 7163);
             trailRenderer4.gameObject.SetActive(currentRow > 12912);
+            if(showingOffNominal){
+                trailRenderer1Off.gameObject.SetActive(true);
+                trailRenderer2Off.gameObject.SetActive(currentRow > 1495);
+                trailRenderer3Off.gameObject.SetActive(currentRow > 7163);
+                trailRenderer4Off.gameObject.SetActive(currentRow > 12912);
+            }else{
+                trailRenderer1Off.gameObject.SetActive(false);
+                trailRenderer2Off.gameObject.SetActive(false);
+                trailRenderer3Off.gameObject.SetActive(false);
+                trailRenderer4Off.gameObject.SetActive(false);
+            }
 
             Vector3[] subArray;
+            Vector3[] subArrayOff;
 
             subArray = new Vector3[currentRow + 1];
+            subArrayOff = new Vector3[currentRow + 1];
 
             if(enlargedProportions){
                 Array.Copy(allExpandedR, subArray, currentRow + 1);
+                Array.Copy(allExpandedROff, subArrayOff, currentRow + 1);
             }else{
                 Array.Copy(allR, subArray, currentRow + 1);
+                Array.Copy(allROff, subArrayOff, currentRow + 1);
             }
 
             int segment1End = Mathf.Min(currentRow, 1496);
             trailRenderer1.positionCount = segment1End + 1;
+            trailRenderer1Off.positionCount = segment1End + 1;
             for(int i = 0; i <= segment1End; i++){
                 trailRenderer1.SetPosition(i, subArray[i]);
+                trailRenderer1Off.SetPosition(i, subArrayOff[i]);
             }
 
             if(currentRow > 1495){
                 int segment2End = Mathf.Min(currentRow, 7164) - 1496;
                 trailRenderer2.positionCount = segment2End + 1;
+                trailRenderer2Off.positionCount = segment2End + 1;
                 for (int i = 0; i <= segment2End; i++){
                     trailRenderer2.SetPosition(i, subArray[1496 + i]);
+                    trailRenderer2Off.SetPosition(i, subArrayOff[1496 + i]);
                 }
             }
 
             if(currentRow > 7163){
                 int segment3End = Mathf.Min(currentRow, 12913) - 7164;
                 trailRenderer3.positionCount = segment3End + 1;
+                trailRenderer3Off.positionCount = segment3End + 1;
                 for (int i = 0; i <= segment3End; i++)
                 {
                     trailRenderer3.SetPosition(i, subArray[7164 + i]);
+                    trailRenderer3Off.SetPosition(i, subArrayOff[7164 + i]);
                 }
             }
 
             if(currentRow > 12912){
                 int segment4End = currentRow - 12913;
                 trailRenderer4.positionCount = segment4End + 1;
+                trailRenderer4Off.positionCount = segment4End + 1;
                 for (int i = 0; i <= segment4End; i++)
                 {
                     trailRenderer4.SetPosition(i, subArray[12913 + i]);
+                    trailRenderer4Off.SetPosition(i, subArrayOff[12913 + i]);
                 }
             }
 
@@ -503,6 +544,10 @@ public class SimVars : MonoBehaviour {
             trailRenderer3.gameObject.SetActive(false);
             trailRenderer4.gameObject.SetActive(false);
             moonTrailRenderer.gameObject.SetActive(false);
+            trailRenderer1Off.gameObject.SetActive(false);
+            trailRenderer2Off.gameObject.SetActive(false);
+            trailRenderer3Off.gameObject.SetActive(false);
+            trailRenderer4Off.gameObject.SetActive(false);
         }
     }
 
@@ -531,6 +576,10 @@ public class SimVars : MonoBehaviour {
             speedInputMenu.SetActive(!TSliderActive);
             dataModeLabel.text = "Data explorer";
         }
+    }
+
+    public void ChangeIsShowingOffNominal(){
+        showingOffNominal = !showingOffNominal;
     }
 
     public void CameraZoom(){
