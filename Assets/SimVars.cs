@@ -338,9 +338,9 @@ public class SimVars : MonoBehaviour {
         PositionXText.text = $"{(int) (r.x * 1000f)},";
         PositionYText.text = $"{(int) (r.y * 1000f)},";
         PositionZText.text = $"{(int) (r.z * 1000f)}";
-        VelocityXText.text = $"{Mathf.Round(v.x * 1000f * 1000f) * 0.001f},";
-        VelocityYText.text = $"{Mathf.Round(v.y * 1000f * 1000f) * 0.001f},";
-        VelocityZText.text = $"{Mathf.Round(v.z * 1000f * 1000f) * 0.001f}";
+        VelocityXText.text = $"{(v.x * 1000f).ToString("F3")},";
+        VelocityYText.text = $"{(v.y * 1000f).ToString("F3")},";
+        VelocityZText.text = $"{(v.z * 1000f).ToString("F3")},";
         MassText.text = $"Mass: {m} kg";
         if(allWPSA[currentRow] != 0){
             wpsaText.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
