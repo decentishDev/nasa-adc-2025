@@ -1,30 +1,26 @@
 # NASA ADC 2025
 
-A submission from Prospect High School's Computer Science Club
+A submission from Team CSC - Prospect High School's Computer Science Club
+
+Try the web version: https://matthewlundeen.itch.io/nasa-adc-2025
 
 ## Demonstration
-```
-Video link, photos, and other explanation goes here
-```
+![Screenshot 1](images/screenshot1.png)
+![Screenshot 2](images/screenshot2.png)
+![Screenshot 3](images/screenshot3.png)
+![Screenshot 4](images/screenshot4.png)
 
 ## Team members
-Albert Kim
-
-Christopher Pawlak
-
-Efe Ozalp
-
-Matthew Lundeen
-
-Oliver Lach
-
-Sharul Shah
+* Albert Kim
+* Christopher Pawlak
+* Efe Ozalp
+* Matthew Lundeen
+* Oliver Lach
+* Sharul Shah
 
 ## Creating using:
 Unity Personal Edition
-
 GitHub
-
 Visual Studio Code
 
 ## External assests
