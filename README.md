@@ -19,9 +19,9 @@ Try the web version: https://matthewlundeen.itch.io/nasa-adc-2025
 * Sharul Shah
 
 ## Creating using:
-Unity Personal Edition
-GitHub
-Visual Studio Code
+Unity Personal Edition  
+GitHub  
+Visual Studio Code  
 
 ## External assests
 Moon texture (mapped onto our own sphere model): https://www.cgtrader.com/free-3d-models/space/planet/8k-photo-realistic-moon  
