@@ -11,7 +11,7 @@ Try the web version: https://matthewlundeen.itch.io/nasa-adc-2025
 ![Screenshot 4](images/screenshot4.png)
 
 ## Team members
-* Albert Ki
+* Albert Kim
 * Christopher Pawlak
 * Efe Ozalp
 * Matthew Lundeen
