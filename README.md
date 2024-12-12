@@ -15,7 +15,7 @@ Try the web version: https://matthewlundeen.itch.io/nasa-adc-2025
 * Christopher Pawlak
 * Efe Ozalp
 * Matthew Lundeen
-* Oliver Lach
+* Oliver Lac
 * Sharul Shah
 
 ## Creating using:
