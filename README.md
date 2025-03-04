@@ -1,7 +1,7 @@
 # NASA ADC 2025 [WINNERS]
 
-A submission from Team CSC - Prospect High School's Computer Science Club
-Selected as a 2025 top team to present in Houston at NASA
+A submission from Team CSC - Prospect High School's Computer Science Club.  
+Selected as a 2025 top team to present in Houston at NASA.
 
 Try the web version: https://matthewlundeen.itch.io/nasa-adc-2025
 
