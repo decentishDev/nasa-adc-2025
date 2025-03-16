@@ -9,6 +9,8 @@ public class UIController : MonoBehaviour {
     public Slider sizeSlider;
     public bool inSettings = false;
     public GameObject settingsMenu;
+    public bool inColorKey = false;
+    public GameObject colorKeyMenu;
 
     void Start(){
         sizeSlider.minValue = -3000f;
@@ -23,5 +25,9 @@ public class UIController : MonoBehaviour {
     public void SettingToggler() {
         settingsMenu.SetActive(inSettings ? false : true);
         inSettings = !inSettings;
+    }
+    public void ColorToggler() {
+        colorKeyMenu.SetActive(inColorKey ? false : true);
+        inColorKey = !inColorKey;
     }
 }
