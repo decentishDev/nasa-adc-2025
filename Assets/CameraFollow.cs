@@ -39,7 +39,6 @@ public class CameraFollow : MonoBehaviour {
             transform.position = Vector3.Lerp(transform.position, new Vector3(-215f, -80f, fullSystemZoom), SimVars.lerpConstant);
 
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), SimVars.lerpConstant);
-            
             direction = new Vector3(Mathf.Sin(currentRotationAngle), 0, Mathf.Cos(currentRotationAngle)) * distance;
 
         } else if (cameraMode == 1f) {
@@ -123,4 +122,25 @@ public class CameraFollow : MonoBehaviour {
         modeText.text = cameraModes[(int) cameraMode];
     }
 }
+
+
+
+              /@@@@&&&\       /&&&@@@@\
+         /@@@###%%%%%%##\   /##%%%%%%###@@@\
+      /@@##%%&&****++++++\ /++++****&&%%##@@\
+    /##%%&***++=======++*****++=======++***&%%\
+   /#%%****+++===----:::::::::----===+++****%%##\
+  /%%****++==--::::::,,,,,,,,,,::::::--==++****%%\
+  %%***++=--::::,,,,,,,,,,,,,,,,,,,,::::--=++***%%
+  %%***++=--::::,,,,,,,,,,,,,,,,,,,,::::--=++***%%
+  \%%***++=--::::,,,,,,,,,,,,,,,,,::::--==++***%%/
+   \#%%****+++==--::::,,,,,,,,::::--==+++****%%/
+    \##%%&***++==---::::::::::---==++***&%%##/
+      \@@##%%&&***+++=========+++***&&%%##@/
+         \@@@###%%%%%%#######%%%%%%###@@@/
+              \@@@@&&&&&&&&&&&&&&@@@@/
+                  \@@@@@@@@@@@@@@@/
+                     \@@@@@@@@@/
+                        \@@@/
+                         \@/
 
